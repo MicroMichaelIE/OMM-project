@@ -21,6 +21,13 @@ export const MemeInteractionBackend = async (
     return response
 }
 
+
+//Images imported from https://imgflip.com/api
+export const getAPIMemes = async () => {
+    const response = await fetch('https://api.imgflip.com/get_memes');
+    return await response.json();
+};
+
 export const uploadImagesBackend = async (
     formData: FormData,
     token: string

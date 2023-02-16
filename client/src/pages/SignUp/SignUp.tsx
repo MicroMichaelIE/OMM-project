@@ -106,7 +106,7 @@ export const SignUp = () => {
             <Button
                 type="button"
                 variant="secondary"
-                onClick={() => navigate('/sign-in')}
+                onClick={() => navigate('/login')}
             >
                 Sign In
             </Button>
