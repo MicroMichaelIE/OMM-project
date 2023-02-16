@@ -12,12 +12,11 @@ const userSchema = mongoose.Schema({
         unique: true,
         required: true,
     },
-    user_first_name: { type: String },
-    user_last_name: { type: String },
-    profile_picture: { type: String },
-    creation_date: { type: Date, default: Date.now },
-    user_description: { type: String },
-    last_login: { type: Date, default: Date.now },
+    userFirstName: { type: String },
+    userlastName: { type: String },
+    profilePicture: { type: String },
+    creationDate: { type: Date, default: Date.now },
+    lastLogin: { type: Date, default: Date.now },
 })
 
 // construct an item model, using the item schema

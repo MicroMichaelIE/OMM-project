@@ -1,0 +1,103 @@
+//IMPORTS
+
+@import '../../../Variables.scss';
+
+//SCSS
+
+.EntrySlider {
+    width: 100%;
+
+    .MuiSlider-thumbColorPrimary {
+        color: white;
+        border: 2px solid black;
+    }
+    &.Current {
+        .MuiSlider-track {
+            color: $blue;
+        }
+
+        .MuiSlider-rail {
+            color: $bluelight;
+        }
+
+        .MuiSlider-valueLabelLabel {
+            color: #fff;
+        }
+        .Scale {
+            p {
+                color: $blue;
+            }
+        }
+    }
+
+    &.Future {
+        .MuiSlider-track {
+            color: $darkblue;
+        }
+
+        .MuiSlider-rail {
+            color: $lightblue;
+        }
+
+        .MuiSlider-valueLabelLabel {
+            color: #fff;
+        }
+        .Scale {
+            p {
+                color: $darkblue;
+            }
+        }
+        .Manual {
+            display: none;
+            .PercentWrapper {
+                background-color: $darkblue;
+            }
+        }
+    }
+
+    .Scale {
+        display: flex;
+        justify-content: space-between;
+    }
+    .Manual {
+        display: flex;
+        justify-content: flex-end;
+        .PercentWrapper {
+            display: flex;
+            background-color: $blue;
+            border-radius: $borderradius;
+            position: relative;
+            padding: 0.3rem 0.5rem;
+            height: 30px;
+            @media (max-width: $mobile) {
+                height: 35px;
+            }
+            input {
+                width: 45px;
+                border: 0px;
+                background-color: transparent;
+                text-align: right;
+                color: white;
+                font-size: $normaltext;
+                margin-right: 15px;
+            }
+            .InnerWrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 25px;
+                height: 30px;
+                @media (max-width: $mobile) {
+                    height: 35px;
+                }
+                p {
+                    font-size: $normaltext;
+                    color: white;
+                }
+            }
+        }
+    }
+}

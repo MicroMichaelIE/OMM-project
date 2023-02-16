@@ -6,9 +6,16 @@ dotenv.config()
 let refreshTokens = []
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
 
-export const generateJWT = (email) => {
+export const generateJWT = (userAuth) => {
     try {
-        const token = jwt.sign({ username: email }, accessTokenSecret)
+        const token = jwt.sign(
+            {
+                _id: userAuth._id,
+                username: userAuth.email,
+                password: userAuth.password,
+            },
+            accessTokenSecret
+        )
 
         return token
     } catch (err) {
@@ -22,13 +29,15 @@ export const authenticateJWT = (req, res, next) => {
 
     if (authHeader) {
         const token = authHeader.split(' ')[1]
-
-        jwt.verify(token, accessTokenSecret, (err) => {
+        try {
+            const decoded = jwt.verify(token, accessTokenSecret)
+            req.user_id = decoded._id
+            next()
+        } catch (err) {
             if (err) {
                 return res.sendStatus(403)
             }
-            next()
-        })
+        }
     } else {
         res.sendStatus(401)
     }

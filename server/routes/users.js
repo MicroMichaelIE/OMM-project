@@ -1,15 +1,16 @@
 import express from 'express'
-import { signIn } from '../services/user.js'
+import { getUser, login, signUp } from '../services/user.js'
 import { authenticateJWT } from '../services/auth/authentication.js'
 
 const router = express.Router()
 
-/* GET users listing. */
-router.get('/signin', signIn)
-router.get('/userSample', (req, res) => {
-    res.status(200).json({
-        user: { username: 'test', email: 'myemail@123.com' },
-    })
-})
+// POST api/users/login
+router.post('/login', login)
+
+// POST api/users/signup
+router.post('/signup', signUp)
+
+// GET api/users
+router.get('/', authenticateJWT, getUser)
 
 export default router

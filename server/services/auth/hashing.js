@@ -12,10 +12,10 @@ export const generateHash = async (password) => {
     }
 }
 
-export const compareHash = async (entry_password, hashed_password) => {
+export const compareHash = async (entryPassword, hashedPassword) => {
     let result = null
     try {
-        result = await bcrypt.compare(entry_password, hashed_password)
+        result = await bcrypt.compare(entryPassword, hashedPassword)
     } catch (e) {
         console.log(e)
         return null

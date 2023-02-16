@@ -1,0 +1,59 @@
+@import '../../Variables.scss';
+.Button {
+    max-width: 300px;
+    height: 57px;
+    width: 100%;
+    border-radius: 2rem;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    border: none;
+    background-color: $lightgreen;
+    font-size: 1.2rem;
+    &:hover {
+        background-color: $darkgreen;
+    }
+    &.disabled {
+        color: rgb(240, 240, 240);
+        background-color: lighten($blue, 30%);
+    }
+
+    &.inverted {
+        background-color: $blue;
+        color: $lightgreen;
+        border: 2px solid $lightgreen;
+        &:hover {
+            background-color: $darkgreen;
+        }
+    }
+    &.Slim {
+        padding: 0.5rem 1rem;
+    }
+    &.White {
+        background-color: #fff;
+        color: $blue;
+    }
+    &.Outlined {
+        &.enabled {
+            background-color: transparent;
+            border: 1px solid $blue;
+            color: $blue;
+            &:hover {
+                background-color: $blue;
+                color: white;
+            }
+        }
+        &.disabled {
+            background-color: transparent;
+            color: lighten(grey, 0%);
+            border: 1px solid lighten(grey, 0%);
+            &:hover::before {
+                height: 0%;
+                width: 0%;
+            }
+        }
+    }
+
+    @media (max-width: $mobile) {
+        font-size: $mobiletext;
+    }
+}

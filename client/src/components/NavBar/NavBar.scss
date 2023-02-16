@@ -1,0 +1,35 @@
+@import '../../Variables.scss';
+
+.navBar {
+    width: 100%;
+    background-color: $blue;
+    display: flex;
+    flex-grow: 0;
+    font-family: 'Bahnschrift', sans-serif;
+    height: 80px;
+
+    .rightSide {
+        justify-content: flex-end;
+        gap: 2rem;
+        .Text {
+            color: whitesmoke;
+            font-size: large;
+            font-weight: bold;
+            align-items: flex-end;
+        }
+        .fullDiv {
+            height: 100%;
+        }
+        .slogan {
+            font-size: 1.3rem !important;
+            margin-bottom: 0;
+
+            @media (max-width: $mobile) {
+                font-size: 1rem !important;
+            }
+        }
+    }
+    .dropdown ::after {
+        display: none;
+    }
+}

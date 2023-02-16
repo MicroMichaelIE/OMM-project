@@ -1,0 +1,14 @@
+.container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.border {
+    border-bottom: 1px solid white;
+    width: 100%;
+    // min-width: 600px;
+}
+.content {
+    padding: 0 10px 0 10px;
+}

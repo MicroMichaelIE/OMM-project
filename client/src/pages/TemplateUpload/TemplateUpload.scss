@@ -1,0 +1,15 @@
+.TemplateUpload {
+    width: 100%;
+
+    .previewZone {
+        display: flex;
+        flex-direction: row;
+
+        .memePreview {
+            margin: 0 auto;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            border: 1px solid black;
+        }
+    }
+}

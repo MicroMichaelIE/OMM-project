@@ -1,0 +1,84 @@
+//IMPORTS
+
+@import '../../../Variables.scss';
+
+//SCSS
+
+.EntryDropdown {
+    width: 100%;
+    background-color: inherit;
+    display: block;
+    position: relative;
+
+    label {
+        font-size: $normaltext;
+        font-weight: 400;
+        line-height: 1.5;
+        display: block;
+        @media (max-width: $mobile) {
+            font-size: $mobiletext;
+        }
+    }
+    .EntryBox {
+        background-color: white;
+        color: #191919;
+        width: 100%;
+        height: 3rem;
+        padding: 0 1rem;
+        font-weight: 400;
+        max-height: 48px;
+        border-radius: 3px;
+        border: none;
+        box-shadow: inset 0 0 0 1px #889cac;
+        font-size: $normaltext;
+        appearance: none;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        @media (max-width: $mobile) {
+            font-size: $mobiletext;
+            height: 2.5rem;
+        }
+        &:focus-visible {
+            box-shadow: inset 0 0 0 2px #ff7000;
+        }
+        &:active {
+            box-shadow: inset 0 0 0 2px #ff7000;
+        }
+        .left {
+            //width relative to the parent div
+            margin: 0;
+        }
+        .right {
+            margin: 0;
+            width: 15px;
+            margin-left: 0.5rem;
+            @media (max-width: $mobile) {
+                width: 10px;
+            }
+            img {
+                width: 100%;
+            }
+        }
+    }
+    .slightpadding {
+        max-height: 100%;
+
+        .OptionDropdown {
+            background-color: white;
+            padding: 0.5rem 0;
+            height: 140px;
+            width: 100%;
+            border: grey 1px solid;
+            overflow-y: auto;
+            max-height: 256px;
+            border-radius: 5px;
+            position: absolute;
+            z-index: 10;
+            &::marker {
+                appearance: none;
+            }
+        }
+    }
+}

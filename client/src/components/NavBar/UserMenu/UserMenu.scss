@@ -1,0 +1,31 @@
+.UserMenu {
+    max-width: 100px;
+    max-height: 100px;
+    .UserMenu__border {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        color: white;
+        border-radius: 13px;
+        box-shadow: 0 0 0 1px white;
+        align-items: center;
+        justify-content: center;
+
+        .UserMenu__image {
+            width: 100%;
+            height: 100%;
+
+            > img {
+                width: 100%;
+                box-shadow: 0 0 0 1px white;
+            }
+        }
+        .DropDownText {
+            align-items: center;
+            > a {
+                padding: 0 8px;
+                margin-bottom: -6px;
+            }
+        }
+    }
+}

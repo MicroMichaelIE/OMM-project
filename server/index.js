@@ -1,18 +1,37 @@
 import createError from 'http-errors'
-import express from 'express'
+import express, { json } from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
-import monk from 'monk'
 import path from 'path'
+import cors from 'cors'
+import bodyParser from 'body-parser'
+import mongoose from 'mongoose'
+
+import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
 const MONGODB_PORT = process.env.DBPORT || '27017'
-const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
-console.log(`Connected to MongoDB at port ${MONGODB_PORT}`)
-// ######
+// const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
+const connectionOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    dbName: 'omm-ws2223',
+}
+mongoose.set('strictQuery', true)
+mongoose
+    .connect(
+        `mongodb://127.0.0.1:${MONGODB_PORT}/omm-ws2223`,
+        connectionOptions
+    )
+    .then(() => {
+        console.log('Connected to MongoDB')
+    })
+    .catch((err) => {
+        console.log('Error connecting to MongoDB', err)
+    })
 
 const PORT = process.env.PORT || 3001
 
@@ -20,26 +39,24 @@ const app = express()
 const __dirname = path.resolve()
 
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+app.use(cors())
+app.use(json())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-app.use(function (req, res, next) {
-    req.db = db
+app.use('/api/users', usersRouter)
+app.use('/api/memes', memesRouter)
     next()
-})
-
-app.use(express.static(path.join(__dirname, '../client/public')))
-app.use('/users', usersRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
 })
+app.use(express.static(path.join(__dirname, '../client/public')))
 
 app.listen(PORT, () => {
     console.log('')
-    console.log('Server is running')
+    console.log('Server is running on', PORT)
 })
 
 app.use(function (err, req, res, next) {
@@ -49,5 +66,4 @@ app.use(function (err, req, res, next) {
 
     // render the error page
     res.status(err.status || 500)
-    res.render('error')
 })

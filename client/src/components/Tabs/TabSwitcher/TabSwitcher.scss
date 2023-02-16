@@ -1,0 +1,28 @@
+//IMPORTS
+
+@import '../../../Variables.scss';
+
+//SCSS
+
+.TabSwitcher {
+    width: 100%;
+    .TabHeader {
+        justify-items: flex-start;
+        display: flex;
+        gap: 1rem;
+        list-style-type: none;
+        padding: 0;
+        @media (max-width: $mobile) {
+            gap: 0.5rem;
+            justify-content: flex-start;
+        }
+    }
+
+    .TabLine {
+        display: block;
+        background-color: rgb(204, 204, 204);
+        height: 2px;
+        width: 100%;
+        margin-top: -2px;
+    }
+}
