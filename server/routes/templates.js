@@ -8,7 +8,9 @@ const upload = multer();
 const router = express.Router();
 
 router.post('/', upload.array('template'), uploadTemplates);
+router.use(express.static('./public'))
 router.get('/', getTemplates);
+router.use(express.static('./public'))
 router.get('/:id', getTemplateById);
 
 
