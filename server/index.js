@@ -10,10 +10,13 @@ import mongoose from 'mongoose'
 import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 
+
+
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
 const MONGODB_PORT = process.env.DBPORT || '27017'
+console.log("MONGODB_PORT "+MONGODB_PORT);
 // const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
 const connectionOptions = {
     useNewUrlParser: true,
@@ -46,7 +49,6 @@ app.use(cookieParser())
 
 app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
-    next()
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

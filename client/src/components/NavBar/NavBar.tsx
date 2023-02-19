@@ -38,8 +38,14 @@ const NavBar = () => {
                 <Nav.Link
                     onClick={() => navigate('/templates')}
                     className="Text"
-                >
+                > 
                     Templates
+                </Nav.Link>
+                   <Nav.Link
+                    onClick={() => navigate('/create')}
+                    className="Text"
+                >
+                    Create
                 </Nav.Link>
 
                 {/* TODO: Create Items here when in Desktop View should dissappear when in Mobile. AboutUs, ??, ??  */}
