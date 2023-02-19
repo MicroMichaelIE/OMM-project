@@ -11,7 +11,7 @@ export const generateJWT = (userAuth) => {
         const token = jwt.sign(
             {
                 _id: userAuth._id,
-                username: userAuth.email,
+                username: userAuth.username,
                 password: userAuth.password,
             },
             accessTokenSecret

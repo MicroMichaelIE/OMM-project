@@ -48,10 +48,10 @@ export const SignUp = () => {
             <h1>Sign Up</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="email"
-                        placeholder="Enter email"
+                        type="text"
+                        placeholder="Enter Username"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setUsername(e.target.value)
                         }
