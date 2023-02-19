@@ -1,17 +1,17 @@
-import { Router } from 'express'
-import { upload } from '../config/multer.js'
-import { authenticateJWT } from '../services/auth/authentication.js'
-import { getMemeTemplates, uploadMemeTemplate } from '../services/templates.js'
+import express from 'express';
+import { uploadTemplates, getTemplates, getTemplateById } from '../services/templates.js';
 
-const router = Router()
+import multer from 'multer';
 
-router.get('/', authenticateJWT, getMemeTemplates)
-// router.get('/:id', authenticateJWT, getTemplate)
-router.post(
-    '/upload',
-    authenticateJWT,
-    upload.array('files'),
-    uploadMemeTemplate
-)
+const upload = multer();
 
-export default router
+const router = express.Router();
+
+router.post('/', upload.array('template'), uploadTemplates);
+router.use(express.static('./public'))
+router.get('/', getTemplates);
+router.use(express.static('./public'))
+router.get('/:id', getTemplateById);
+
+
+export default router;

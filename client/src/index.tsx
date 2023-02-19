@@ -21,16 +21,20 @@ import { ProtectedLoginRoute } from './services/routingService'
 import { Profile } from './pages/Profile/Profile'
 import { Settings } from './pages/Settings/Settings'
 import { Feed } from './pages/Feed/Feed'
+import TemplateList from "./pages/Templates/Templates";
+import UploadPage from './pages/TemplateUpload/Main/Main'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<App />} errorElement={<NotFound />}>
             <Route path="/" element={<Editor />} />
+            {/* <Route path="/:id" element={<Editor />} /> */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="/feed" element={<Feed />} />
+            <Route path="/templates" element={<TemplateList />} />
             <Route element={<ProtectedLoginRoute />}>
-                <Route path="/upload" element={<TemplateUpload />} />
+                <Route path="/upload" element={<UploadPage />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/settings" element={<Settings />} />
             </Route>

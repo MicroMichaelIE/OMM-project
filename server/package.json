@@ -19,6 +19,7 @@
         "express": "^4.18.2",
         "http-errors": "~1.6.3",
         "i": "^0.3.7",
+        "jimp": "^0.22.4",
         "jsonwebtoken": "^9.0.0",
         "mongoose": "^6.8.1",
         "monk": "7.3.3",

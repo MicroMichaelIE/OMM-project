@@ -1,0 +1,14 @@
+.Editor {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.Canvas-Area {
+  flex: 1;
+}
+
+.Template-Area {
+  flex: 1;
+  margin-top: 20px;
+}
