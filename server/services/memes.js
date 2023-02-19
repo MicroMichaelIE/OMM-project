@@ -1,6 +1,5 @@
 import Meme from '../models/memes.js'
 import mongoose from 'mongoose'
-import fs from 'fs'
 
 // Allows us to get all memes, or just ones by a specific user
 export const getMemes = async (req, res) => {
@@ -12,7 +11,7 @@ export const getMemes = async (req, res) => {
     }
 
     try {
-        const memes = await Meme.find(payload)
+        const memes = await Meme.find(payload, { draft: false })
             .sort({ _id: 1 })
             .populate('owner', '_id, username')
             .populate('comments', '_id, text, date, owner')
@@ -87,7 +86,7 @@ export const updateMeme = async (req, res) => {
 }
 
 export const getMemesByUserId = async (req, res) => {
-    const userId = req.firebase_uid
+    const userId = req._id
     try {
         // const memes = await helperGetMemesByUserId(userId)
         // this was creating error if not memes
