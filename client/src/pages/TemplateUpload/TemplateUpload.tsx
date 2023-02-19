@@ -7,6 +7,7 @@ import useAuth from '../../hooks/useAuth'
 
 import './templateUpload.scss'
 
+
 export type MemeTemplate = {
     id?: string
     file: File
@@ -23,25 +24,33 @@ export const TemplateUpload = () => {
     const { userToken } = useAuth()
 
     const MemeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault()
-        if (!e.target.files) return
-        const files = e.target.files
-        Array.from(files).forEach((file) => {
-            const reader = new FileReader()
+        e.preventDefault();
+        if (!e.target.files) return;
+
+        const files = e.target.files;
+
+        const promises = Array.from(files).map((file) => {
+            return new Promise<MemeTemplate>((resolve, reject) => {
+            const reader = new FileReader();
             reader.onloadend = () => {
-                setTemplates((prev) => [
-                    ...prev,
-                    {
-                        file: file,
-                        src: reader.result as string,
-                        alt: file.name,
-                        ImagePreviewUrl: reader.result as string,
-                    },
-                ])
-            }
-            reader.readAsDataURL(file)
-        })
-    }
+                resolve({
+                file,
+                src: reader.result as string,
+                alt: file.name,
+                ImagePreviewUrl: reader.result as string,
+                templateName: "",
+                });
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(promises).then((templates) => {
+            setTemplates((prev) => [...prev, ...templates]);
+        });
+        };
+
 
     const handleTemplateNameChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -56,27 +65,112 @@ export const TemplateUpload = () => {
     }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = new FormData()
+        e.preventDefault();
+        const formData = new FormData();
         templates.forEach((template) => {
-            console.log(template)
-            formData.append('files', template.file, template.alt)
-        })
+            formData.append("template", template.file);
+            if (template.templateName !== undefined) {
+                formData.append("name", template.templateName);
+            }
+        });
 
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value)
+        try {
+            const response = await fetch("http://localhost:3001/api/templates", {
+            method: "POST",
+            body: formData,
+            });
+
+            if (response.ok) {
+            navigate("/templates");
+            }
+        } catch (error) {
+            console.error(error);
         }
-        console.log('here')
-        const { ok, message } = await uploadTemplateBackend(
-            formData,
-            userToken!
-        )
-        if (ok) {
-            console.log(ok)
-        } else {
-            console.log(message)
+        };
+
+        //new
+         const handleUrlUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+            e.preventDefault()
+            const url = (e.currentTarget.elements as HTMLFormControlsCollection & { url: { value: string } }).url.value
+            try {
+            const response = await fetch(url)
+            const blob = await response.blob()
+            const file = new File([blob], 'filename', { type: 'image/jpeg' })
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                const template: MemeTemplate = {
+                file,
+                src: reader.result as string,
+                alt: 'template',
+                ImagePreviewUrl: reader.result as string,
+                templateName: '',
+                }
+                setTemplates([...templates, template])
+            }
+            reader.readAsDataURL(file)
+            } catch (error) {
+            console.error(error)
+            }
         }
-    }
+
+        const handleScreenshotUpload = async () => {
+            try {
+                const mediaDevices = navigator.mediaDevices as any
+                const stream = await mediaDevices.getDisplayMedia({ video: true })
+                const track = stream.getVideoTracks()[0]
+                const imageCapture = new (window as any).ImageCapture(track);
+
+                const blob = await imageCapture.takePhoto()
+                const file = new File([blob], 'screenshot.png', { type: 'image/png' })
+                const reader = new FileReader()
+
+                reader.onload = () => {
+                const newTemplate = {
+                    file,
+                    src: reader.result as string,
+                    alt: file.name,
+                    ImagePreviewUrl: reader.result as string,
+                    templateName: '',
+                }
+                setTemplates((prev) => [...prev, newTemplate])
+                }
+
+                reader.readAsDataURL(blob)
+            } catch (error) {
+                console.error(error)
+            }
+            }
+
+        const handleCameraUpload = async () => {
+        try {
+            const mediaDevices = navigator.mediaDevices as any
+            const stream = await mediaDevices.getUserMedia({ video: true })
+            const track = stream.getVideoTracks()[0]
+            const imageCapture = new (window as any).ImageCapture(track);
+
+            const blob = await imageCapture.takePhoto()
+            const file = new File([blob], 'photo.png', { type: 'image/png' })
+            const reader = new FileReader()
+
+            reader.onload = () => {
+            const newTemplate = {
+                file,
+                src: reader.result as string,
+                alt: file.name,
+                ImagePreviewUrl: reader.result as string,
+                templateName: '',
+            }
+            setTemplates((prev) => [...prev, newTemplate])
+            }
+
+            reader.readAsDataURL(blob)
+        } catch (error) {
+            console.error(error)
+        }
+        }
+
+
+
 
     return (
         <div className="TemplateUpload">

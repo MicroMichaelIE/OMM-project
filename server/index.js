@@ -10,6 +10,7 @@ import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 import templatesRouter from './routes/templates.js'
 import * as dotenv from 'dotenv'
+import templatesRouter from './routes/templates.js'
 
 var __dirname = path.resolve()
 
@@ -53,6 +54,7 @@ app.use(cookieParser())
 
 app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
+    next()
 
 app.use('/api/templates', templatesRouter)
 
