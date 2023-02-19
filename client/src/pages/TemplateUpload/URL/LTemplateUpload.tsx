@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
+import { uploadTemplateBackend } from '../../../services/templateService'
+import { ErrorType } from '../Main/Main'
 
 import './URLUpload.scss'
 
@@ -14,7 +16,9 @@ export type MemeTemplate = {
   templateName?: string
 }
 
-export const URLUpload = () => {
+export const URLUpload = ({
+  setError
+}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
   const [template, setTemplate] = useState<MemeTemplate>({
     src: '',
     alt: '',
@@ -58,17 +62,11 @@ export const URLUpload = () => {
       formData.append('name', template.templateName)
     }
 
-    try {
-      const response = await fetch('http://localhost:3001/api/templates', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (response.ok) {
-        navigate('/templates')
-      }
-    } catch (error) {
-      console.error(error)
+    const { ok, message } = await uploadTemplateBackend(formData)
+    if (ok) {
+      navigate('/templates')
+    } else {
+      setError({ message, show: true })
     }
   }
 

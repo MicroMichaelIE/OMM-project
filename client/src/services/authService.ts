@@ -19,7 +19,6 @@ export const loginBackend = async ({ username, password }: userAuth) => {
     }
 }
 
-
 export const signUpBackend = async ({ username, password }: userAuth) => {
     console.log(username, password)
     const response = await fetch(`${URL}/users/signup`, {
@@ -31,7 +30,7 @@ export const signUpBackend = async ({ username, password }: userAuth) => {
     })
     const json = await response.json()
 
-    console.log("----res"+response)
+    console.log('----res' + response)
     if (response.ok) {
         return { ok: true, token: json.token }
     } else {

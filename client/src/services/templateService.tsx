@@ -1,8 +1,19 @@
 import { URL } from './urlService'
 
+import { useLocalStorage } from '../hooks/useLocalStorage'
+
+const { getItem } = useLocalStorage()
+
+
 export const getTemplatesBackend = async () => {
-    const response = await fetch(`${URL}/template/`, {
+
+    const userToken = getItem('token')
+
+    const response = await fetch(`${URL}/templates/`, {
         method: 'GET',
+        headers: {
+            Authorization: `Bearer ${userToken}`,
+        },
     })
     const json = await response.json()
 
@@ -14,20 +25,15 @@ export const getTemplatesBackend = async () => {
 }
 
 export const uploadTemplateBackend = async (
-    templateDetails: FormData,
-    token: string
+    templateDetails: FormData
 ) => {
-    console.log(templateDetails)
 
-    for (let [key, value] of templateDetails.entries()) {
-        console.log(key, value)
-    }
-
+    const userToken = getItem('token')
+    console.log(userToken)
     const response = await fetch(`${URL}/templates/upload`, {
         method: 'POST',
         headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${userToken}`,
         },
         body: templateDetails,
     })

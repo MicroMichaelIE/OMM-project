@@ -53,18 +53,26 @@ app.use(cookieParser())
 
 app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
-
 app.use('/api/templates', templatesRouter)
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404))
-})
+app.use(
+    '/templates',
+    express.static(path.join(__dirname, 'server', 'public', 'templates'))
+)
+
+console.log(path.join(__dirname, 'server', 'public', 'templates'))
+
 app.use(express.static(path.join(__dirname, '../client/public')))
 
 app.listen(PORT, () => {
     console.log('')
     console.log('Server is running on', PORT)
+})
+
+// error handler
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404))
 })
 
 app.use(function (err, req, res, next) {

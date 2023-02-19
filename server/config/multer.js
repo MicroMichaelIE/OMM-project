@@ -37,10 +37,15 @@ export const upload = multer({
 
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, `./public/uploads/${location}`)
+            cb(null, `server/public/templates`)
         },
         filename: (req, file, cb) => {
-            cb(null, `${Date.now()}${path.extname(file.originalname)}`)
+            cb(
+                null,
+                `${file.originalname.split('.')[0]}-${Date.now()}${path.extname(
+                    file.originalname
+                )}`
+            )
         },
     }),
     onError: (err, next) => {

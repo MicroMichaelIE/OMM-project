@@ -7,29 +7,37 @@ import { FileTemplateUpload } from '../File/FileUpload';
 import { CameraTemplateUpload } from '../Camera/CameraUpload';
 import { ScreenshotUpload } from '../Screenshot/ScreenshotUpload';
 import { DrawingTemplateUpload } from '../Drawing/DrawingUpload';
+import { ErrorBox } from '../../../components/ErrorBox/ErrorBox';
+
+export interface ErrorType {
+  message: string;
+  show: boolean;
+}
 
 function UploadPage() {
   const [uploadType, setUploadType] = useState('');
+  const [error, setError] = useState<ErrorType>({} as ErrorType);
 
   interface ButtonClickHandler {
     (type: string): void;
   }
   const handleButtonClick: ButtonClickHandler = (type) => {
     setUploadType(type);
+    setError({ message: '', show: false });
   };
 
   const renderUploadOption = () => {
     switch (uploadType) {
       case 'file':
-        return <FileTemplateUpload />;
+        return <FileTemplateUpload setError={setError} />;
       case 'url':
-        return <URLUpload />;
+        return <URLUpload setError={setError} />;
       case 'screenshot':
-        return <ScreenshotUpload />;
+        return <ScreenshotUpload setError={setError} />;
       case 'camera':
-        return <CameraTemplateUpload />;
+        return <CameraTemplateUpload setError={setError} />;
       case 'draw':
-        return <DrawingTemplateUpload />;
+        return <DrawingTemplateUpload setError={setError} />;
       default:
         return null;
     }
@@ -44,6 +52,7 @@ function UploadPage() {
       <button onClick={() => handleButtonClick('camera')}>Camera</button>
       <button onClick={() => handleButtonClick('draw')}>Draw</button>
       {renderUploadOption()}
+      {error.show && <ErrorBox errorMessage={error.message} />}
     </div>
   );
 }

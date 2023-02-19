@@ -10,8 +10,8 @@ import { UserMenu } from './UserMenu/UserMenu'
 const NavBar = () => {
     // const navigate = useNavigate()
     //const { user, logout } = useAuth()
-    const { userToken, logout } = useAuth()
-    const signedIn = userToken ? true : false
+    const { isAuthenticated, logout } = useAuth()
+    const signedIn = isAuthenticated ? true : false
 
     const navigate = useNavigate()
 
@@ -42,11 +42,17 @@ const NavBar = () => {
                     Editor
 
                 </Nav.Link>
-                   <Nav.Link
+                <Nav.Link
                     onClick={() => navigate('/create')}
                     className="Text"
                 >
                     Create
+                </Nav.Link>
+                <Nav.Link
+                    onClick={() => navigate('/templates')}
+                    className="Text"
+                >
+                    Templates
                 </Nav.Link>
 
                 {/* TODO: Create Items here when in Desktop View should dissappear when in Mobile. AboutUs, ??, ??  */}

@@ -2,7 +2,9 @@ import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
+import { uploadTemplateBackend } from '../../../services/templateService'
 //import 'dom-mediacapture-record';
+import { ErrorType } from '../Main/Main'
 
 import './FileUpload.scss'
 
@@ -16,7 +18,9 @@ export type MemeTemplate = {
     templateName?: string
 }
 
-export const FileTemplateUpload = () => {
+export const FileTemplateUpload = ({
+    setError
+}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
     const [templates, setTemplates] = useState<MemeTemplate[]>([])
 
     const navigate = useNavigate()
@@ -73,18 +77,33 @@ export const FileTemplateUpload = () => {
         });
 
         try {
-            const response = await fetch("http://localhost:3001/api/templates", {
-                method: "POST",
-                body: formData,
-            });
+            const { ok, message } = await uploadTemplateBackend(formData);
 
-            if (response.ok) {
+
+            console.log(ok)
+
+            if (ok) {
                 navigate("/templates");
-            }
+            } else {
+                setError({
+                    message: message,
+                    show: true,
+                });
+            };
         } catch (error) {
-            console.error(error);
+            if (error instanceof Error) {
+                setError({
+                    message: error.message,
+                    show: true,
+                });
+            } else {
+                setError({
+                    message: "Something went wrong",
+                    show: true,
+                });
+            }
         }
-    };
+    }
 
     return (
         <div className="FileTemplateUpload">

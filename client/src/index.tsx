@@ -15,13 +15,12 @@ import App from './app/App'
 import NotFound from './pages/NotFound/NotFound'
 import { Login } from './pages/Login/Login'
 import { SignUp } from './pages/SignUp/SignUp'
-import { TemplateUpload } from './pages/TemplateUpload/TemplateUpload'
 import { Editor } from './pages/Editor/Editor'
 import { ProtectedLoginRoute } from './services/routingService'
 import { Profile } from './pages/Profile/Profile'
 import { Settings } from './pages/Settings/Settings'
 import { Feed } from './pages/Feed/Feed'
-import TemplateList from "./pages/Templates/Templates";
+import { TemplateList } from "./pages/Templates/Templates";
 import UploadPage from './pages/TemplateUpload/Main/Main'
 
 const router = createBrowserRouter(

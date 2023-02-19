@@ -4,8 +4,12 @@ import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
 import './ScreenshotUpload.scss'
 import { ImageCapture } from 'image-capture'
+import { ErrorType } from '../Main/Main'
+import { uploadTemplateBackend } from '../../../services/templateService'
 
-export const ScreenshotUpload = () => {
+export const ScreenshotUpload = ({
+  setError
+}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
   const [src, setSrc] = useState<string>('')
   const [templateName, setTemplateName] = useState<string>('')
   const navigate = useNavigate()
@@ -44,17 +48,11 @@ export const ScreenshotUpload = () => {
       formData.append('name', templateName)
     }
 
-    try {
-      const response = await fetch('http://localhost:3001/api/templates', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (response.ok) {
-        navigate('/templates')
-      }
-    } catch (error) {
-      console.error(error)
+    const { ok, message } = await uploadTemplateBackend(formData)
+    if (ok) {
+      navigate('/templates')
+    } else {
+      setError({ message, show: true })
     }
   }
 

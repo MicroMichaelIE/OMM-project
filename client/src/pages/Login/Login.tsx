@@ -14,7 +14,7 @@ export const Login = () => {
         SUCCESS,
     }
 
-    const { login, error, checkToken } = useAuth()
+    const { login, error, isAuthenticated } = useAuth()
 
     const [formState, setFormState] = useState(FormState.LOADING)
     const [username, setUsername] = useState('')
@@ -22,19 +22,15 @@ export const Login = () => {
 
     const navigate = useNavigate()
 
-    const checkTokenAndNavigate = async () => {
-        console.log('runs')
-        const { ok } = await checkToken()
-        console.log(ok)
-        if (ok) {
-            navigate('/')
-        }
-    }
+
 
     useEffect(() => {
-        checkTokenAndNavigate()
+        console.log(isAuthenticated)
+        if (isAuthenticated) {
+            navigate('/')
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [checkTokenAndNavigate])
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         setFormState(FormState.LOADING)

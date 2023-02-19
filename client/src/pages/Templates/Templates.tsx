@@ -42,68 +42,80 @@
 import React, { useState, useEffect } from "react";
 import { Buffer } from 'buffer';
 import { useNavigate } from "react-router-dom";
+import { getTemplatesBackend } from "../../services/templateService";
+import { templateURL } from "../../services/urlService";
 
 
 
 interface Template {
-  id: string;
   _id: string;
-  name: string;
-  data: Buffer;
-  type: string;
+  name: string
+  owner: string
+  date: Date
+  imageLocation: string
+  published: boolean
+
 }
 
 interface TemplateProps {
   template: Template;
 }
 
-const TemplateList: React.FC = () => {
-  const [templates, setTemplates] = useState<Template[]>([]);
+export const TemplateList = () => {
+  const [stateTemplates, setTemplates] = useState<Template[]>([]);
 
   const [hovered, setHovered] = useState(false);
   const [hoveredTemplate, setHoveredTemplate] = useState<Template | null>(null);
   const navigate = useNavigate();
 
+  const getTemplates = async () => {
+    const { ok, templates, message } = await getTemplatesBackend();
+    if (ok) {
+      setTemplates(templates);
+      console.log(templates)
+    } else {
+      console.error(message);
+    }
+  }
+
   useEffect(() => {
-    fetch("http://localhost:3001/api/templates")
-      .then((response) => response.json())
-      .then((data) => {
-        setTemplates(data.templates);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    getTemplates();
+
   }, []);
 
 
-    const getImageUrl = (template: Template): string => {
-        const base64String = Buffer.from(template.data).toString('base64');
-        return `data:${template.type};base64,${base64String}`;
-    };
+  // const getImageUrl = (template: Template): string => {
+  //   const base64String = Buffer.from(template.data).toString('base64');
+  //   return `data:${template.type};base64,${base64String}`;
+  // };
 
-    const handleMouseEnter = (template: Template) => {
+  const toServerUrl = (url: string) => {
+    return `http://localhost:3001/${url}`;
+  };
+
+  const handleMouseEnter = (template: Template) => {
     setHovered(true);
     setHoveredTemplate(template);
-    };
+  };
 
-    const handleMouseLeave = () => {
-        setHovered(false);
-        setHoveredTemplate(null);
-    };
+  const handleMouseLeave = () => {
+    setHovered(false);
+    setHoveredTemplate(null);
+  };
 
-    const handleTemplateClick = (template: Template) => {
-        localStorage.setItem("selectedTemplateId", template._id);
-        navigate("/");
-    };
+  // const handleTemplateClick = (template: Template) => {
+  //   localStorage.setItem("selectedTemplateId", template._id);
+  //   navigate("/");
+  // };
 
 
-return (
+  return (
     <div>
       <h1>Template Gallery</h1>
       <div>
-        {templates.map((template: Template) => (
+        {stateTemplates.map((template: Template) => (
           <div
-            key={template.id}
+            key={template._id}
             className="template"
             onMouseEnter={() => handleMouseEnter(template)}
             onMouseLeave={handleMouseLeave}
@@ -127,13 +139,13 @@ return (
             />
             <h2>{template.name}</h2>
             <img
-              src={getImageUrl(template)}
+              src={`${templateURL}/${template.imageLocation}`}
               alt={template.name}
               style={{ maxWidth: 300, maxHeight: 300 }}
             />
             {hovered && hoveredTemplate === template && (
               <button
-                onClick={() => handleTemplateClick(template)}
+                // onClick={() => handleTemplateClick(template)}
                 style={{
                   position: "absolute",
                   top: "50%",
@@ -155,6 +167,5 @@ return (
     </div>
   );
 };
-export default TemplateList;
 
 

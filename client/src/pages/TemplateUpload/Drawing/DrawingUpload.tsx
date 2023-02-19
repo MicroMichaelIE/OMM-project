@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
+import { uploadTemplateBackend } from '../../../services/templateService'
+import { ErrorType } from '../Main/Main'
 
 import './DrawingUpload.scss'
 
@@ -14,7 +16,9 @@ export type DrawingTemplate = {
     templateName?: string
 }
 
-export const DrawingTemplateUpload = () => {
+export const DrawingTemplateUpload = ({
+    setError
+}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
     const [templates, setTemplates] = useState<DrawingTemplate[]>([])
     const [isDrawing, setIsDrawing] = useState(false)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -112,17 +116,21 @@ export const DrawingTemplateUpload = () => {
         })
 
         try {
-            const response = await fetch('http://localhost:3001/api/templates', {
-                method: 'POST',
-                body: formData,
-            })
+            const { ok, message } = await uploadTemplateBackend(formData)
 
-            if (response.ok) {
+            if (ok) {
                 navigate('/templates')
+            } else {
+                setError({ message, show: true })
             }
         } catch (error) {
-            console.error(error)
+            if (error instanceof Error) {
+                setError({ message: error.message, show: true })
+            } else {
+                setError({ message: 'Something went wrong', show: true })
+            }
         }
+
     }
 
     return (

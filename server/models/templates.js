@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 
 // define a mongoose schema for item
 const templateSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
     name: { type: String, required: true },
     owner: { type: String, ref: 'User', required: true },
     date: { type: Date, default: Date.now },
@@ -10,5 +9,5 @@ const templateSchema = mongoose.Schema({
     published: { type: Boolean, default: false },
 })
 
-const Template = mongoose.model('Template', templateSchema)
-export default Template
+const MemeTemplate = mongoose.model('Template', templateSchema)
+export default MemeTemplate

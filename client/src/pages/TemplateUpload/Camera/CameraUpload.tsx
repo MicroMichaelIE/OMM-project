@@ -2,6 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
+import { uploadTemplateBackend } from '../../../services/templateService'
+import { ErrorType } from '../Main/Main'
 import './CameraUpload.scss'
 
 export type MemeTemplate = {
@@ -14,7 +16,9 @@ export type MemeTemplate = {
 }
 
 
-export const CameraTemplateUpload = () => {
+export const CameraTemplateUpload = ({
+  setError
+}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
   const [templates, setTemplates] = useState<MemeTemplate[]>([])
   const videoRef = useRef<HTMLVideoElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -45,6 +49,7 @@ export const CameraTemplateUpload = () => {
 
   const handleCameraActivation = () => {
     setCameraActive(true)
+    setError({ message: '', show: false })
 
     // Wait for a brief delay before attempting to activate the camera again
     setTimeout(() => {
@@ -58,7 +63,10 @@ export const CameraTemplateUpload = () => {
           }
         })
         .catch((error) => {
-          console.error(error)
+          setError({
+            message: 'Camera access denied. Please allow camera access to use this feature.',
+            show: true,
+          })
         })
     }, 500) // Change this delay to a value that works well for your use case
   }
@@ -131,16 +139,15 @@ export const CameraTemplateUpload = () => {
     })
 
     try {
-      const response = await fetch('http://localhost:3001/api/templates', {
-        method: 'POST',
-        body: formData,
-      })
+      const { ok, message } = await uploadTemplateBackend(formData)
 
-      if (response.ok) {
+      if (ok) {
         navigate('/templates')
       }
     } catch (error) {
-      console.error(error)
+      if (error instanceof Error) {
+        setError({ message: error.message, show: true })
+      }
     }
   }
 
