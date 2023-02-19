@@ -1,7 +1,5 @@
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-
-dotenv.config()
+import dotenv from 'dotenv'     
 
 let refreshTokens = []
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
@@ -10,11 +8,10 @@ export const generateJWT = (userAuth) => {
     try {
         const token = jwt.sign(
             {
-                _id: userAuth._id,
-                username: userAuth.email,
+                username: userAuth.username,
                 password: userAuth.password,
             },
-            accessTokenSecret
+            process.env.ACCESS_TOKEN_SECRET
         )
 
         return token
@@ -70,3 +67,11 @@ export const getToken = (req, res) => {
         }
     })
 }
+
+export const checkUserItemAuth = (item, uid) => {
+    if (item.owner == uid) {
+        return true;
+    } else {
+        return false;
+    }
+};

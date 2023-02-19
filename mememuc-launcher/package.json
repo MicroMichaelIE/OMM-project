@@ -13,6 +13,8 @@
   "author": "LMU Mediainformatics Group",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^7.5.0"
+    "concurrently": "^7.5.0",
+    "react-speech-kit": "^3.0.1",
+    "react-speech-recognition": "^3.10.0"
   }
 }

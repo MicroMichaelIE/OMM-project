@@ -10,7 +10,11 @@ import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 import templatesRouter from './routes/templates.js'
 
-
+import * as dotenv from 'dotenv'
+var __dirname = path.resolve();
+dotenv.config({
+    path: path.resolve(__dirname, '../.env')
+});
 
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
@@ -39,7 +43,6 @@ mongoose
 const PORT = process.env.PORT || 3001
 
 const app = express()
-const __dirname = path.resolve()
 
 app.use(logger('dev'))
 app.use(cors())

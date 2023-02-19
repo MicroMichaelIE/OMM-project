@@ -1,5 +1,5 @@
 import Template from '../models/templates.js'
-
+import {checkUserItemAuth} from './auth/authentication.js'
 import fs from 'fs'
 import path from 'path'
 
@@ -33,3 +33,19 @@ export const uploadMemeTemplate = async (req, res) => {
         })
     }
 }
+
+export const makeTemplatePrivate = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const item = await Template.findById(id);
+        if (!checkUserItemAuth(item, req.id)) {
+            return res.status(401).json({ message: 'User is not authorized to edit this item' });
+        }
+        item.published = !item.published;
+        await item.save();
+        const message = 'ok';
+        res.status(200).json({ message: message });
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+};
