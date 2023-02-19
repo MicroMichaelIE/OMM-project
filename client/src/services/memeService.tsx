@@ -38,6 +38,14 @@ export const MemeInteractionBackend = async (
     return response
 }
 
+
+
+//Images imported from https://imgflip.com/api
+export const getAPIMemes = async () => {
+    const response = await fetch('https://api.imgflip.com/get_memes');
+    return await response.json();
+};
+
 export const DeleteMemeCommentBackend = async (
     memeDetails: MemeInteractionDetails,
     token: string
@@ -60,6 +68,7 @@ export const DeleteMemeCommentBackend = async (
         return { ok: false, message: json.message }
     }
 }
+
 
 export const uploadImagesBackend = async (
     formData: FormData,

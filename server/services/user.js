@@ -35,7 +35,7 @@ export const signUp = async (req, res) => {
     const email = body.email
     console.log(body)
     const password = body.password
-
+console.log("is the data here"+ email)
     try {
         const hashedPassword = await generateHash(password)
         const newUser = new User({

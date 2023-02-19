@@ -94,7 +94,7 @@ export const Login = () => {
 
             <div className="d-flex justify-content-center mt-3">
                 <Button type="button" onClick={() => navigate('/signup')}>
-                    Sign In
+                    Sign Up
                 </Button>
             </div>
         </div>
