@@ -12,7 +12,7 @@ export type ProfileData = {
 }
 
 export type userAuth = {
-    email: string
+    username: string
     password: string
 }
 
@@ -32,7 +32,22 @@ export type Meme = {
     username: string
     created_at: string
     updated_at: string
-    likes: number
-    dislikes: number
-    comments: number
+    likes: [
+        {
+            id: string
+            user_id: string
+            meme_id: string
+        }
+    ]
+    comments: [
+        {
+            id: string
+            comment: string
+            user_id: string
+            meme_id: string
+            username: string
+            created_at: string
+            updated_at: string
+        }
+    ]
 }

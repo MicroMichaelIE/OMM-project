@@ -1,19 +1,43 @@
-import { useState, useMemo } from "react";
-import { FeedMeme } from "../../components/FeedMeme/FeedMeme";
-import { Meme } from "../../types/types";
+import { useState, useMemo } from 'react'
+import { FeedMeme } from '../../components/FeedMeme/FeedMeme'
+import {
+    getMemesBackend,
+    MemeInteractionBackend,
+} from '../../services/memeService'
+import { Meme } from '../../types/types'
 
 export const Feed = () => {
-    const [memes, setMemes] = useState<Meme[]>([]);
+    const [memes, setMemes] = useState<Meme[]>([])
 
     const getMemes = async () => {
-        const response = await fetch("/api/memes");
-        const data = await response.json();
-        setMemes(data);
-    };
+        const { memes, message, ok } = await getMemesBackend()
+
+        if (ok) {
+            setMemes(memes)
+        } else {
+            console.log(message)
+        }
+    }
 
     useMemo(() => {
-        getMemes();
-    }, []);
+        getMemes()
+    }, [])
+
+    const onLike = (meme: Meme) => {
+        // do something
+    }
+
+    const onDislike = (meme: Meme) => {
+        // do something
+    }
+
+    const onComment = (meme: Meme) => {
+        // do something
+    }
+
+    const onShare = (meme: Meme) => {
+        // do something
+    }
 
     /*
     const onLike = (meme: Meme) => {
@@ -31,17 +55,21 @@ export const Feed = () => {
     };
     */
 
-
     return (
         <div className="Feed">
-        <h1>Feed</h1>
-        <div>
-            {memes.map((meme) => (
-                <FeedMeme key={meme.id}
-                {...meme}
-                />
-
+            <h1>Feed</h1>
+            <div>
+                {memes.map((meme) => (
+                    <FeedMeme
+                        key={meme.id}
+                        meme={meme}
+                        onLike={onLike}
+                        onDislike={onDislike}
+                        onComment={onComment}
+                        onShare={onShare}
+                    />
+                ))}
+            </div>
         </div>
-        </div>
-    );
-    };
+    )
+}

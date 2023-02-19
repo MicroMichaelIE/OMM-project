@@ -1,14 +1,14 @@
 import createError from 'http-errors'
-import express, { json } from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import path from 'path'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 
 import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
+import templatesRouter from './routes/templates.js'
 
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
@@ -40,13 +40,13 @@ const __dirname = path.resolve()
 
 app.use(logger('dev'))
 app.use(cors())
-app.use(json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
-    next()
+app.use('/api/templates', templatesRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

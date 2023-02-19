@@ -104,7 +104,7 @@ export function AuthProvider({
     }
 
     const signUp = async (
-        { email, password }: userAuth,
+        { username, password }: userAuth,
         confirmPassword: string
     ) => {
         if (!checkPasswordsMatch(password, confirmPassword)) {
@@ -113,7 +113,7 @@ export function AuthProvider({
         }
         try {
             let { token, ok, message } = await signUpBackend({
-                email,
+                username,
                 password,
             })
             console.log(ok, message)
@@ -136,6 +136,7 @@ export function AuthProvider({
         try {
             if (userToken) {
                 let { ok, message } = await verifyTokenBackend(userToken)
+                console.log(ok)
                 if (ok) {
                     return { ok: true }
                 } else {
@@ -169,7 +170,6 @@ export function AuthProvider({
             return { ok: false }
         }
     }
-    
 
     const logout = () => {
         console.log('logout')

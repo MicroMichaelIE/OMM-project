@@ -36,10 +36,10 @@ const NavBar = () => {
                     Feed
                 </Nav.Link>
                 <Nav.Link
-                    onClick={() => navigate('/templates')}
+                    onClick={() => navigate('/')}
                     className="Text"
                 >
-                    Templates
+                    Editor
                 </Nav.Link>
 
                 {/* TODO: Create Items here when in Desktop View should dissappear when in Mobile. AboutUs, ??, ??  */}

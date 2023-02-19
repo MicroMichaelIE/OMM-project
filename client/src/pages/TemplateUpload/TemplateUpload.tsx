@@ -2,6 +2,8 @@ import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../components/Entry/EntryText/EntryText'
+import { uploadTemplateBackend } from '../../services/templateService'
+import useAuth from '../../hooks/useAuth'
 
 import './templateUpload.scss'
 
@@ -18,6 +20,7 @@ export const TemplateUpload = () => {
     const [templates, setTemplates] = useState<MemeTemplate[]>([])
 
     const navigate = useNavigate()
+    const { userToken } = useAuth()
 
     const MemeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
@@ -56,15 +59,22 @@ export const TemplateUpload = () => {
         e.preventDefault()
         const formData = new FormData()
         templates.forEach((template) => {
-            formData.append('file', template.file)
+            console.log(template)
+            formData.append('files', template.file, template.alt)
         })
 
-        const response = await fetch('/api/templates/upload', {
-            method: 'POST',
-            body: formData,
-        })
-        if (response.ok) {
-            navigate('/templates')
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value)
+        }
+        console.log('here')
+        const { ok, message } = await uploadTemplateBackend(
+            formData,
+            userToken!
+        )
+        if (ok) {
+            console.log(ok)
+        } else {
+            console.log(message)
         }
     }
 

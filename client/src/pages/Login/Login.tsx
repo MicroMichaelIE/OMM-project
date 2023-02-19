@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
@@ -14,20 +14,34 @@ export const Login = () => {
         SUCCESS,
     }
 
-    const { login, error } = useAuth()
+    const { login, error, checkToken } = useAuth()
 
     const [formState, setFormState] = useState(FormState.LOADING)
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
     const navigate = useNavigate()
+
+    const checkTokenAndNavigate = async () => {
+        console.log('runs')
+        const { ok } = await checkToken()
+        console.log(ok)
+        if (ok) {
+            navigate('/')
+        }
+    }
+
+    useEffect(() => {
+        checkTokenAndNavigate()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [checkTokenAndNavigate])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         setFormState(FormState.LOADING)
         e.preventDefault()
 
         try {
-            const { ok } = await login({ email, password })
+            const { ok } = await login({ username, password })
             if (!ok) {
                 throw new Error(error)
                 setFormState(FormState.ERROR)
@@ -46,13 +60,13 @@ export const Login = () => {
         <div className="Login mt-3">
             <h1>Login</h1>
             <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
+                <Form.Group controlId="formBasicUsername">
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="email"
-                        placeholder="Enter email"
-                        onChange={(e) => setEmail(e.target.value)}
-                        value={email}
+                        type="text"
+                        placeholder="Enter username"
+                        onChange={(e) => setUsername(e.target.value)}
+                        value={username}
                         required
                     />
                 </Form.Group>
