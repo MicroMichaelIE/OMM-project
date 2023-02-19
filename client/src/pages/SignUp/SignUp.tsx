@@ -51,7 +51,7 @@ export const SignUp = () => {
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter Username"
+                        placeholder="Enter username"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setUsername(e.target.value)
                         }

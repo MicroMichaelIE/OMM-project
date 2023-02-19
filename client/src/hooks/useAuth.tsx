@@ -61,7 +61,7 @@ export function AuthProvider({
     const navigate = useNavigate()
     const location = useLocation()
 
-    const { getItem, setItem } = useLocalStorage()
+    const { getItem, setItem, removeItem } = useLocalStorage()
 
     // If we change page, reset the error state.
     useEffect(() => {
@@ -174,6 +174,7 @@ export function AuthProvider({
     const logout = () => {
         console.log('logout')
         setUserToken(null)
+        removeItem('token')
         navigate('/feed')
     }
 

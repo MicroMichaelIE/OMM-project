@@ -22,7 +22,7 @@ export const Profile = () => {
         <div className="Profile">
             <h1>Profile</h1>
             <div className="Profile__info">
-                <p>{user?.email}</p>
+                <p>{user?.username}</p>
             </div>
         </div>
     )
