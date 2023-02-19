@@ -13,4 +13,11 @@ router.post('/signup', signUp)
 // GET api/users
 router.get('/', authenticateJWT, getUser)
 
+// verify token
+router.post('/verify', authenticateJWT, (req, res) => {
+    res.status(200).json({
+        message: 'Token verified',
+    })
+})
+
 export default router

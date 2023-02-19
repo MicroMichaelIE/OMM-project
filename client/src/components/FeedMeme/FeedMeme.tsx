@@ -8,8 +8,6 @@ interface FeedMemeProps {
     onDislike: (meme: Meme) => void
     onComment: (meme: Meme) => void
     onShare: (meme: Meme) => void
-    onEdit: (meme: Meme) => void
-    onDelete: (meme: Meme) => void
 }
 
 export const FeedMeme = ({
@@ -18,8 +16,6 @@ export const FeedMeme = ({
     onDislike,
     onComment,
     onShare,
-    onEdit,
-    onDelete,
 }: FeedMemeProps): JSX.Element => {
     return (
         <BlankCard>
@@ -32,13 +28,7 @@ export const FeedMeme = ({
                         <button onClick={() => onLike(meme)}>
                             <Icon name="thumb_up" />
                         </button>
-                        <p>{meme.likes}</p>
-                    </div>
-                    <div className="dislike">
-                        <button onClick={() => onDislike(meme)}>
-                            <Icon name="thumb_down" />
-                        </button>
-                        <p>{meme.dislikes}</p>
+                        <p>{meme.likes.length}</p>
                     </div>
                     <div className="comment">
                         <button onClick={() => onComment(meme)}>
@@ -54,14 +44,6 @@ export const FeedMeme = ({
                 </div>
                 <div className="description">
                     <p>{meme.description}</p>
-                </div>
-                <div className="actions">
-                    <button onClick={() => onEdit(meme)}>
-                        <Icon name="edit" />
-                    </button>
-                    <button onClick={() => onDelete(meme)}>
-                        <Icon name="delete" />
-                    </button>
                 </div>
             </div>
         </BlankCard>

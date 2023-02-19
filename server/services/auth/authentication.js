@@ -25,8 +25,9 @@ export const generateJWT = (userAuth) => {
 }
 
 export const authenticateJWT = (req, res, next) => {
+    console.log('authenticating')
     const authHeader = req.headers.authorization
-
+    console.log(req.body)
     if (authHeader) {
         const token = authHeader.split(' ')[1]
         try {

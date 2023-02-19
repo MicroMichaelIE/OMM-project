@@ -2,11 +2,11 @@ import { userAuth } from '../types/types'
 import { LoggedInUser } from '../types/types'
 import { URL } from './urlService'
 
-export const loginBackend = async ({ email, password }: userAuth) => {
+export const loginBackend = async ({ username, password }: userAuth) => {
     const response = await fetch(`${URL}/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
     })
     const json = await response.json()
     if (response.ok) {
@@ -19,14 +19,15 @@ export const loginBackend = async ({ email, password }: userAuth) => {
     }
 }
 
-export const signUpBackend = async ({ email, password }: userAuth) => {
-    console.log(email, password, URL)
+
+export const signUpBackend = async ({ username, password }: userAuth) => {
+    console.log(username, password)
     const response = await fetch(`${URL}/users/signup`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
     })
     const json = await response.json()
 
@@ -39,7 +40,7 @@ export const signUpBackend = async ({ email, password }: userAuth) => {
     }
 }
 export const changePasswordBackend = async (
-    email: string,
+    username: string,
     password: string,
     oldpassword: string,
     token: string
@@ -50,7 +51,7 @@ export const changePasswordBackend = async (
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ email, password, oldpassword }),
+        body: JSON.stringify({ username, password, oldpassword }),
     })
 
     const json = await response.json()
@@ -66,7 +67,7 @@ export const changePasswordBackend = async (
 }
 
 export const verifyTokenBackend = async (token: string) => {
-    const response = await fetch(`${URL}/users/checktoken`, {
+    const response = await fetch(`${URL}/users/verify`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -76,10 +77,8 @@ export const verifyTokenBackend = async (token: string) => {
 
     const json = await response.json()
 
-    console.log('json: ', json)
-
     if (response.ok) {
-        return { ok: response.ok, newToken: json.token }
+        return { ok: true, messsage: json.message }
     } else {
         console.log(json)
         return { ok: false, message: json.message }

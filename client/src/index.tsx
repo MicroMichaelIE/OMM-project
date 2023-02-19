@@ -20,6 +20,7 @@ import { Editor } from './pages/Editor/Editor'
 import { ProtectedLoginRoute } from './services/routingService'
 import { Profile } from './pages/Profile/Profile'
 import { Settings } from './pages/Settings/Settings'
+import { Feed } from './pages/Feed/Feed'
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
             <Route path="/" element={<Editor />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/feed" element={<Feed />} />
             <Route element={<ProtectedLoginRoute />}>
                 <Route path="/upload" element={<TemplateUpload />} />
                 <Route path="/profile" element={<Profile />} />
