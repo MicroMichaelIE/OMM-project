@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Container, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../components/Entry/EntryText/EntryText'
 import { uploadTemplateBackend } from '../../services/templateService'
@@ -81,6 +81,7 @@ export const TemplateUpload = () => {
     return (
         <div className="TemplateUpload">
             <h1>Upload Template</h1>
+            <Container
             <Form onSubmit={handleSubmit}>
                 <div className="previewZone">
                     {templates.map((template, index) => (
