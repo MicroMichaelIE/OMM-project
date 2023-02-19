@@ -1,3 +1,4 @@
+import React from 'react';
 import './Icon.scss';
 
 interface IconProps {

@@ -10,8 +10,6 @@ import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 import templatesRouter from './routes/templates.js'
 import * as dotenv from 'dotenv'
-
-import * as dotenv from 'dotenv'
 var __dirname = path.resolve();
 dotenv.config({
     path: path.resolve(__dirname, '../.env')
