@@ -1,4 +1,6 @@
 import MemeTemplate from '../models/templates.js'
+import Meme from '../models/memes.js'
+import Jimp from 'jimp'
 
 import fs from 'fs'
 import path from 'path'
@@ -7,8 +9,8 @@ import multer from 'multer'
 
 const __dirname = path.resolve()
 
-const pathToTemplates = path.join(__dirname, '.public/templates')
-const pathToFont = path.join(__dirname, './public/fonts/')
+const pathToPublic = path.join(__dirname, 'server/public')
+const pathToFont = path.join(__dirname, 'server/public/fonts/')
 
 export const getMemeTemplates = async (req, res) => {
     try {
@@ -21,18 +23,25 @@ export const getMemeTemplates = async (req, res) => {
 
 export const createMemeAPI = async (req, res) => {
     const templateId = req.params.id
-    const template = MemeTemplate.findById(templateId)
+    const template = await MemeTemplate.findById(templateId)
 
     const { fontName, x, y, x2, y2, text, text2 } = req.query
 
-    const imagePath = path.join(pathToTemplates, imageName)
+    const imageName = template.imageLocation
+
+    const imagePath = path.join(pathToPublic, imageName)
     const imageOutPath = path.join(
-        pathToTemplates,
-        `${path.basename(imageName)}_out${path.extname(imageName)}`
+        pathToPublic,
+        'memes',
+        `${path.basename(imageName)}${path.extname(imageName)}`
     )
 
+    const fullFontName = `${fontName}.fnt`
+
     const img = await Jimp.read(imagePath)
-    const font = await Jimp.loadFont(pathToFont + { fontName })
+    const font = await Jimp.loadFont(
+        path.join(pathToFont, fontName, fullFontName)
+    )
 
     const image = {
         data: img.scale(2),
@@ -64,6 +73,22 @@ export const createMemeAPI = async (req, res) => {
         .print(font, lowerCaption.x, lowerCaption.y, lowerCaption.text)
 
     await imageWithText.writeAsync(imageOutPath)
+
+    const meme = new Meme({
+        givenName: template.name,
+        owner: req.user_id,
+        imageLocation: path.join(
+            'memes',
+            `${path.basename(imageName)}${path.extname(imageName)}`
+        ),
+        uploadDate: Date.now(),
+        private: false,
+        draft: false,
+        likes: [],
+        comments: [],
+    })
+
+    const savedMeme = await meme.save()
 
     res.contentType = 'image/png'
     res.sendFile(imageOutPath)

@@ -1,6 +1,7 @@
 import { BlankCard } from '../BlankCard/BlankCard'
 import { Icon } from '../Icon/Icon'
 import { Meme } from '../../types/types'
+import { templateURL } from '../../services/urlService'
 
 interface FeedMemeProps {
     meme: Meme
@@ -20,7 +21,7 @@ export const FeedMeme = ({
     return (
         <BlankCard>
             <div className="Top_Image">
-                <img src={meme.image} alt="meme" />
+                <img src={`${templateURL}/${meme.imageLocation}`} alt="meme" />
             </div>
             <div className="Bottom">
                 <div className="interactions">

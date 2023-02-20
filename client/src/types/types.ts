@@ -23,20 +23,30 @@ export type LoggedInUser = {
     token: string
 }
 
+export type Template = {
+    _id: string
+    name: string
+    owner: string
+    date: Date
+    imageLocation: string
+    published: boolean
+}
+
 export type Meme = {
-    id: string
-    title: string
+    _id: string
+    givenName: string
     description: string
-    image: string
-    user_id: string
-    username: string
-    created_at: string
-    updated_at: string
+    owner: {
+        id: string
+        username: string
+    }
+    imageLocation: string
+    uploadDate: Date
+    private: boolean
+    draft: boolean
     likes: [
         {
             id: string
-            user_id: string
-            meme_id: string
         }
     ]
     comments: [

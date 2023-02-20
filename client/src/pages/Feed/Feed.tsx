@@ -58,10 +58,10 @@ export const Feed = () => {
     return (
         <div className="Feed">
             <h1>Feed</h1>
-            <div>
+            <div className='AllMemes'>
                 {memes.map((meme) => (
                     <FeedMeme
-                        key={meme.id}
+                        key={meme._id}
                         meme={meme}
                         onLike={onLike}
                         onDislike={onDislike}

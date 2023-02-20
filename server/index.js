@@ -60,9 +60,16 @@ app.use(
     express.static(path.join(__dirname, 'server', 'public', 'templates'))
 )
 
-console.log(path.join(__dirname, 'server', 'public', 'templates'))
+app.use(
+    '/memes',
+    express.static(path.join(__dirname, 'server', 'public', 'memes'))
+)
 
 app.use(express.static(path.join(__dirname, '../client/public')))
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/public/index.html'))
+})
 
 app.listen(PORT, () => {
     console.log('')

@@ -89,9 +89,6 @@ export const TemplateList = () => {
   //   return `data:${template.type};base64,${base64String}`;
   // };
 
-  const toServerUrl = (url: string) => {
-    return `http://localhost:3001/${url}`;
-  };
 
   const handleMouseEnter = (template: Template) => {
     setHovered(true);
@@ -103,10 +100,10 @@ export const TemplateList = () => {
     setHoveredTemplate(null);
   };
 
-  // const handleTemplateClick = (template: Template) => {
-  //   localStorage.setItem("selectedTemplateId", template._id);
-  //   navigate("/");
-  // };
+  const handleTemplateClick = (template: Template) => {
+    console.log(template)
+    navigate(`/`, { state: { template } });
+  };
 
 
   return (
@@ -124,6 +121,7 @@ export const TemplateList = () => {
               display: "inline-block",
               margin: "5px",
             }}
+            onClick={() => handleTemplateClick(template)}
           >
             <div
               style={{

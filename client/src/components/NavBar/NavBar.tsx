@@ -43,12 +43,6 @@ const NavBar = () => {
 
                 </Nav.Link>
                 <Nav.Link
-                    onClick={() => navigate('/create')}
-                    className="Text"
-                >
-                    Create
-                </Nav.Link>
-                <Nav.Link
                     onClick={() => navigate('/templates')}
                     className="Text"
                 >

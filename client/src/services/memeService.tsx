@@ -1,7 +1,7 @@
 import { URL } from './urlService'
 
 export const getMemesBackend = async () => {
-    const response = await fetch(`${URL}/meme/`, {
+    const response = await fetch(`${URL}/memes/`, {
         method: 'GET',
     })
     const json = await response.json()

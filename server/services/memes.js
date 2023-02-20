@@ -6,6 +6,8 @@ export const getMemes = async (req, res) => {
     const query = req.query
     const { memeOwner } = query
 
+    let payload = {}
+
     if (memeOwner) {
         payload.memeOwner = memeOwner
     }
