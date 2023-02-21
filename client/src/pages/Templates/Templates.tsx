@@ -49,6 +49,7 @@ import { templateURL } from "../../services/urlService";
 
 interface Template {
   _id: string;
+  givenName: string;
   name: string
   owner: string
   date: Date
@@ -89,9 +90,6 @@ export const TemplateList = () => {
   //   return `data:${template.type};base64,${base64String}`;
   // };
 
-  const toServerUrl = (url: string) => {
-    return `http://localhost:3001/${url}`;
-  };
 
   const handleMouseEnter = (template: Template) => {
     setHovered(true);
@@ -103,10 +101,10 @@ export const TemplateList = () => {
     setHoveredTemplate(null);
   };
 
-  // const handleTemplateClick = (template: Template) => {
-  //   localStorage.setItem("selectedTemplateId", template._id);
-  //   navigate("/");
-  // };
+  const handleTemplateClick = (template: Template) => {
+    console.log(template)
+    navigate(`/`, { state: { template } });
+  };
 
 
   return (
@@ -124,6 +122,7 @@ export const TemplateList = () => {
               display: "inline-block",
               margin: "5px",
             }}
+            onClick={() => handleTemplateClick(template)}
           >
             <div
               style={{
@@ -137,7 +136,7 @@ export const TemplateList = () => {
                 transition: "opacity 0.2s ease-in-out",
               }}
             />
-            <h2>{template.name}</h2>
+            <h4>{template.givenName}</h4>
             <img
               src={`${templateURL}/${template.imageLocation}`}
               alt={template.name}
@@ -158,7 +157,7 @@ export const TemplateList = () => {
                   fontWeight: "bold",
                 }}
               >
-                Create a Meme Using {template.name}
+                Create a Meme Using {template.givenName}
               </button>
             )}
           </div>

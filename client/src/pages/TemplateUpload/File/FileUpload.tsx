@@ -72,7 +72,7 @@ export const FileTemplateUpload = ({
         templates.forEach((template) => {
             formData.append("template", template.file);
             if (template.templateName !== undefined) {
-                formData.append("name", template.templateName);
+                formData.append("givenName", template.templateName);
             }
         });
 

@@ -6,6 +6,8 @@ export const getMemes = async (req, res) => {
     const query = req.query
     const { memeOwner } = query
 
+    let payload = {}
+
     if (memeOwner) {
         payload.memeOwner = memeOwner
     }
@@ -52,6 +54,7 @@ export const createMeme = async (req, res) => {
                 imageLocation: file.path,
                 likes: [],
                 comments: [],
+                uploadDate: new Date(),
             }
             const newMeme = new Meme(parsedMeme)
             await newMeme.save()
@@ -101,19 +104,58 @@ export const getMemesByUserId = async (req, res) => {
     }
 }
 
-export const likeMeme = async (req, res) => {
-    const id = req.params.id
-    const userId = req._id
+export const getMemeAPI = async (req, res) => {
+    const query = req.query
+    const { sort, limit, name, url, id, fileformat } = query
+
+    let params = {}
+    if (name) {
+        params.givenName = name
+    }
+
+    if (url) {
+        params.imageLocation = url
+    }
+
+    if (id) {
+        params._id = id
+    }
+
+    if (fileformat) {
+        params.fileFormat = `.${fileformat}`
+    }
 
     try {
-        await Meme.findOneAndUpdate(
-            id,
-            {
-                $push: { likes: userId },
-            },
-            { new: true }
-        )
-        res.status(200)
+        const memes = await Meme.find(params)
+            .populate('owner', '_id, username')
+            .populate('comments', '_id, text, date, owner')
+            .populate('comments.owner', '_id, username')
+            .sort({ uploadDate: sort })
+            .limit(limit)
+
+        if (memes.length === 0) {
+            return res.status(200).json({ memes: [] })
+        }
+
+        res.status(200).json({ memes: memes })
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+export const likeMeme = async (req, res) => {
+    const id = req.params.id
+    const userId = req.user_id
+
+    try {
+        const meme = await Meme.findOne({ _id: id, likes: { $ne: userId } })
+        if (meme) {
+            meme.likes.push(userId)
+            const newMeme = await meme.save()
+            res.status(200).json({ updatedMeme: newMeme })
+        } else {
+            res.status(206).json({ message: 'Meme already liked' })
+        }
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
@@ -121,17 +163,16 @@ export const likeMeme = async (req, res) => {
 
 export const unlikeMeme = async (req, res) => {
     const id = req.params.id
-    const userId = req._id
-
+    const userId = req.user_id
     try {
-        await Meme.findOneAndUpdate(
-            id,
-            {
-                $pull: { likes: userId },
-            },
-            { new: true }
-        )
-        res.status(200)
+        const meme = await Meme.findOne({ _id: id, likes: { $in: userId } })
+        if (meme) {
+            meme.likes.pull(userId)
+            const newMeme = await meme.save()
+            res.status(200).json({ updatedMeme: newMeme })
+        } else {
+            res.status(206).json({ message: 'Meme not yet liked' })
+        }
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
@@ -139,23 +180,23 @@ export const unlikeMeme = async (req, res) => {
 
 export const commentMeme = async (req, res) => {
     const id = req.params.id
-    const userId = req._id
-    const { text } = req.body
+    const userId = req.user_id
+    const body = req.body
 
     try {
-        await Meme.findOneAndUpdate(
+        const updatedMeme = await Meme.findOneAndUpdate(
             id,
             {
                 $push: {
                     comments: {
-                        text: text,
+                        text: body.text,
                         owner: userId,
                     },
                 },
             },
-            { new: true }
-        )
-        res.status(200)
+            { returnOriginal: false, new: true }
+        ).populate('comments', '_id, text, date, owner')
+        res.status(200).json({ updatedMeme: updatedMeme })
     } catch (error) {
         res.status(404).json({ message: error.message })
     }

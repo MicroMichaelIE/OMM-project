@@ -10,6 +10,7 @@ import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 import templatesRouter from './routes/templates.js'
 import * as dotenv from 'dotenv'
+import multer from 'multer'
 
 var __dirname = path.resolve()
 
@@ -60,26 +61,23 @@ app.use(
     express.static(path.join(__dirname, 'server', 'public', 'templates'))
 )
 
-console.log(path.join(__dirname, 'server', 'public', 'templates'))
+app.use(
+    '/memes',
+    express.static(path.join(__dirname, 'server', 'public', 'memes'))
+)
 
 app.use(express.static(path.join(__dirname, '../client/public')))
-
-app.listen(PORT, () => {
-    console.log('')
-    console.log('Server is running on', PORT)
-})
 
 // error handler
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
 })
+app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'))
+})
 
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message
-    res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-    // render the error page
-    res.status(err.status || 500)
+app.listen(PORT, () => {
+    console.log('')
+    console.log('Server is running on', PORT)
 })
