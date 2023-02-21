@@ -49,6 +49,7 @@ import { templateURL } from "../../services/urlService";
 
 interface Template {
   _id: string;
+  givenName: string;
   name: string
   owner: string
   date: Date
@@ -135,7 +136,7 @@ export const TemplateList = () => {
                 transition: "opacity 0.2s ease-in-out",
               }}
             />
-            <h2>{template.name}</h2>
+            <h4>{template.givenName}</h4>
             <img
               src={`${templateURL}/${template.imageLocation}`}
               alt={template.name}
@@ -156,7 +157,7 @@ export const TemplateList = () => {
                   fontWeight: "bold",
                 }}
               >
-                Create a Meme Using {template.name}
+                Create a Meme Using {template.givenName}
               </button>
             )}
           </div>

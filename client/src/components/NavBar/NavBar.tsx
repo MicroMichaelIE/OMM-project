@@ -36,13 +36,6 @@ const NavBar = () => {
                     Feed
                 </Nav.Link>
                 <Nav.Link
-                    onClick={() => navigate('/')}
-                    className="Text"
-                >
-                    Editor
-
-                </Nav.Link>
-                <Nav.Link
                     onClick={() => navigate('/templates')}
                     className="Text"
                 >

@@ -17,10 +17,8 @@ export type userAuth = {
 }
 
 export type LoggedInUser = {
-    id: string
-    email: string
+    _id: string
     username: string
-    token: string
 }
 
 export type Template = {
@@ -41,23 +39,33 @@ export type Meme = {
         username: string
     }
     imageLocation: string
-    uploadDate: Date
+    uploadDate: string
     private: boolean
     draft: boolean
-    likes: [
-        {
-            id: string
-        }
-    ]
+    likes: string[]
     comments: [
         {
             id: string
-            comment: string
-            user_id: string
-            meme_id: string
-            username: string
-            created_at: string
-            updated_at: string
+            owner: {
+                id: string
+                username: string
+            }
+            postedDate: string
+            text: string
         }
     ]
+}
+
+export type newComment = {
+    text: string
+}
+
+export interface oldComment extends newComment {
+    id: string
+    owner: {
+        id: string
+        username: string
+    }
+    postedDate: string
+    text: string
 }

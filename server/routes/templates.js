@@ -19,11 +19,10 @@ router.post(
     (req, res, next) => {
         arrayUpload(req, res, function (err) {
             if (err instanceof multer.MulterError) {
-                console.log('We got a multer error boys')
                 console.log(err)
                 return res.send('Error with multer')
             } else if (err) {
-                console.log('Error - not caused by multer... but during upload')
+                console.log('Error during upload')
                 return res.status(500).json({ error: err.message })
             }
             // Always null here?!?!

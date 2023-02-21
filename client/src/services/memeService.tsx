@@ -1,13 +1,19 @@
+import { newComment, oldComment } from '../types/types'
 import { URL } from './urlService'
 
-export const getMemesBackend = async () => {
-    const response = await fetch(`${URL}/memes/`, {
+export const getMemesBackend = async (query?: string) => {
+    const url = query ? `${URL}/memes${query}` : `${URL}/memes`
+    const response = await fetch(url, {
         method: 'GET',
     })
     const json = await response.json()
 
     if (response.ok) {
-        return { ok: true, memes: json.memes }
+        if (json.memes.length === 0) {
+            return { ok: true, memes: [] }
+        } else {
+            return { ok: true, memes: json.memes }
+        }
     } else {
         return { ok: false, message: json.message }
     }
@@ -15,27 +21,33 @@ export const getMemesBackend = async () => {
 
 interface MemeInteractionDetails {
     memeId: string
-    userId: string
     interactionType: 'like' | 'unlike' | 'comment'
-    commentId?: string
+    comment?: newComment | oldComment
 }
 
 export const MemeInteractionBackend = async (
-    memeDetails: MemeInteractionDetails,
-    token: string
+    memeDetails: MemeInteractionDetails
 ) => {
+    const token = localStorage.getItem('token')
+    console.log(memeDetails)
     const response = await fetch(
-        `${URL}/meme/${memeDetails.memeId}/${memeDetails.interactionType}`,
+        `${URL}/memes/${memeDetails.memeId}/${memeDetails.interactionType}`,
         {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(memeDetails),
+            body: JSON.stringify(memeDetails.comment)
         }
     )
-    return response
+    const json = await response.json()
+
+    if (response.ok && !json.message) {
+        return { ok: true, updatedMeme: json.updatedMeme }
+    } else {
+        return { ok: false, message: json.message }
+    }
 }
 
 
@@ -46,28 +58,29 @@ export const getAPIMemes = async () => {
     return await response.json();
 };
 
-export const DeleteMemeCommentBackend = async (
-    memeDetails: MemeInteractionDetails,
-    token: string
-) => {
-    const response = await fetch(
-        `${URL}/meme/${memeDetails.memeId}/comment/${memeDetails.commentId}/delete`,
-        {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        }
-    )
+// export const DeleteMemeCommentBackend = async (
+//     memeDetails: MemeInteractionDetails,
+//     token: string
+// ) => {
 
-    const json = await response.json()
+//     const response = await fetch(
+//         `${URL}/meme/${memeDetails.memeId}/comment/${memeDetails.comment!._id!}/delete`,
+//         {
+//             method: 'PUT',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//         }
+//     )
 
-    if (response.ok) {
-        return { ok: true, message: json.message }
-    } else {
-        return { ok: false, message: json.message }
-    }
-}
+//     const json = await response.json()
+
+//     if (response.ok) {
+//         return { ok: true, message: json.message }
+//     } else {
+//         return { ok: false, message: json.message }
+//     }
+// }
 
 
 export const uploadImagesBackend = async (

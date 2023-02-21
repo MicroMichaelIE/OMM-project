@@ -22,8 +22,8 @@ export const Editor = () => {
     const [dropdownValue, setDropdownValue] = useState<string>('')
 
     const fontOptions = [
-        'arial',
-        'impact',
+        { display: "Arial", value: "arial" },
+        { display: "Impact", value: "impact" },
     ]
 
     const location = useLocation()
@@ -85,7 +85,7 @@ export const Editor = () => {
                         <EntryText id='yvalue' label='Y position' type='number' name='yvalue' />
                     </div>
                     <div className="Font">
-                        <EntryDropdown objectKey='font' options={fontOptions} selected={dropdownValue} setSelected={setDropdownValue} />
+                        <EntryDropdown id="font_picker" label="Font" objectKey='fontName' options={fontOptions} selected={dropdownValue} setSelected={setDropdownValue} />
                         <EntryText id='fontsize' label='Font Size' type='number' name='fontsize' />
                         <EntryText id='color' label='Font Color' type='text' name='color' />
                     </div>
