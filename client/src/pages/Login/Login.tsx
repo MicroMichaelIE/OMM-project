@@ -30,7 +30,7 @@ export const Login = () => {
             navigate('/')
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [isAuthenticated])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         setFormState(FormState.LOADING)
@@ -43,7 +43,7 @@ export const Login = () => {
                 setFormState(FormState.ERROR)
             } else {
                 setFormState(FormState.SUCCESS)
-                navigate('/login')
+                navigate('/')
             }
         } catch (err) {
             if (err instanceof Error) {

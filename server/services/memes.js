@@ -185,7 +185,7 @@ export const commentMeme = async (req, res) => {
 
     try {
         const updatedMeme = await Meme.findOneAndUpdate(
-            id,
+            { _id: id },
             {
                 $push: {
                     comments: {

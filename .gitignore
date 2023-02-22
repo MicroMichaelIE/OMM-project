@@ -37,3 +37,9 @@ typings/
 
 # images to not upload 
 server/public/
+
+# next.js build output
+.next
+
+# vite build output
+dist

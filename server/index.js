@@ -21,7 +21,7 @@ dotenv.config({
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
-const MONGODB_PORT = process.env.DBPORT || '27017'
+const MONGODB_PORT = process.env.MONGODB_PORT || 65535
 console.log('MONGODB_PORT ' + MONGODB_PORT)
 // const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
 const connectionOptions = {
@@ -36,7 +36,7 @@ mongoose
         connectionOptions
     )
     .then(() => {
-        console.log('Connected to MongoDB')
+        console.log('Connected to MongoDB on port', MONGODB_PORT, '')
     })
     .catch((err) => {
         console.log('Error connecting to MongoDB', err)
@@ -56,6 +56,12 @@ app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
 app.use('/api/templates', templatesRouter)
 
+app.get('/api/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
 app.use(
     '/templates',
     express.static(path.join(__dirname, 'server', 'public', 'templates'))
@@ -66,18 +72,17 @@ app.use(
     express.static(path.join(__dirname, 'server', 'public', 'memes'))
 )
 
-app.use(express.static(path.join(__dirname, '../client/public')))
+app.use(express.static(path.join(__dirname, '/client/dist')))
 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/client/index.html'))
+})
 // error handler
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
 })
-app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/index.html'))
-})
 
 app.listen(PORT, () => {
-    console.log('')
     console.log('Server is running on', PORT)
 })

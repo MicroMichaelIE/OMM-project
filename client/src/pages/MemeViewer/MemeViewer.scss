@@ -1,3 +1,15 @@
+.split {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    .myButtons {
+        display: flex;
+        gap: 1rem;
+    }
+    > button {
+        margin: 0 !important    ;
+    }
+}
 .MemeViewer {
     display: flex;
     justify-content: space-between;
@@ -42,6 +54,5 @@
         width: 40%;
         display: flex;
         flex-direction: column;
-
     }
 }

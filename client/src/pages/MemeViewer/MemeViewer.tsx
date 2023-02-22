@@ -10,10 +10,14 @@ interface MemeViewerProps {
     currentImageIndex: number;
     totalImages: number;
     meme: Meme;
+    isAutoplayed: boolean;
     onNext: () => void;
     onPrevious: () => void;
     onExit: () => void;
+    onRandom: () => void;
     onCommentSubmit: (memeId: string, comment: newComment) => void;
+    onStartAutoplay: () => void;
+    onStopAutoplay: () => void;
 }
 
 export const MemeViewer = (
@@ -21,10 +25,14 @@ export const MemeViewer = (
         currentImageIndex,
         totalImages,
         meme,
+        isAutoplayed,
         onNext,
         onPrevious,
         onExit,
+        onRandom,
         onCommentSubmit,
+        onStartAutoplay,
+        onStopAutoplay,
     }: MemeViewerProps
 ) => {
 
@@ -40,11 +48,19 @@ export const MemeViewer = (
         onExit();
     };
 
+    const onRandomMeme = () => {
+        onRandom()
+    };
+
 
     return (
         <Modal show={true} onHide={handleExit} size="xl" centered>
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className="split">
                 <Modal.Title>{meme.givenName} {currentImageIndex}/{totalImages}</Modal.Title>
+                <div className="myButtons">
+                    <Button onClick={onRandomMeme}>Random Meme</Button>
+                    {isAutoplayed ? <Button onClick={onStopAutoplay}>Stop Autoplay</Button> : <Button onClick={onStartAutoplay}>Start Autoplay</Button>}
+                </div>
             </Modal.Header>
             <Modal.Body>
                 <div className="MemeViewer">
