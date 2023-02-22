@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { Button, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 import { useNavigate, Outlet } from 'react-router-dom'
 import EntryDropdown from '../../components/Entry/EntryDropdown/EntryDropdown'
@@ -27,6 +27,7 @@ interface queryOptions {
 export const Feed = () => {
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [modalMemeIndex, setModalMemeIndex] = useState(0)
+    const [isAutoplayed, setIsAutoplayed] = useState<boolean>(false)
 
     const [stateMemes, setMemes] = useState<Meme[]>([])
     const [queryString, setQueryString] = useState<string>('')
@@ -40,7 +41,6 @@ export const Feed = () => {
         limit: 10,
     })
     const [user, setUser] = useState<LoggedInUser>({} as LoggedInUser)
-    const navigate = useNavigate()
 
     const { getUser } = useAuth()
 
@@ -228,10 +228,6 @@ export const Feed = () => {
         setModalOpen(true)
     }
 
-    const onModalClose = () => {
-        setModalOpen(false)
-    }
-
     const onNext = () => {
         if (modalMemeIndex + 1 === stateMemes.length) {
             setModalMemeIndex(0)
@@ -248,6 +244,48 @@ export const Feed = () => {
         }
     }
 
+    const onRandom = () => {
+        const randomIndex = Math.floor(Math.random() * (stateMemes.length - 1))
+        setModalMemeIndex(randomIndex)
+    }
+
+    const onStartAutoplay = () => {
+        setIsAutoplayed(true)
+    }
+
+    const onStopAutoplay = () => {
+        setIsAutoplayed(false)
+    }
+
+    const onAutoplay = () => {
+        console.log(modalMemeIndex)
+        onNext()
+        setTimeout(onAutoplay, 1000)
+    }
+
+    // https://tinloof.com/blog/how-to-build-an-auto-play-slideshow-with-react
+    // as help 
+
+    const timerRef = useRef<ReturnType<typeof setInterval>>();
+
+    useEffect(() => {
+        console.log('dirty solution')
+        if (isAutoplayed) {
+            timerRef.current = setInterval(() => {
+                setModalMemeIndex((prevIndex) =>
+                    prevIndex === stateMemes.length - 1 ? 0 : prevIndex + 1
+                )
+            }, 1000)
+        } else {
+            clearInterval(timerRef.current)
+        }
+        return () => clearInterval(timerRef.current)
+    }, [isAutoplayed, modalMemeIndex])
+
+
+
+
+
     return (
         <div className="Feed">
             <h1>Feed</h1>
@@ -261,7 +299,10 @@ export const Feed = () => {
                         value={nameFilter}
                         onChange={handleTextInputChange}
                     />
-                    <Button onClick={() => formatQuery()}>Search</Button>
+                    <Button onClick={() => {
+                        formatQuery()
+                        setFilterReset(true)
+                    }}>Search</Button>
                 </div>
                 <div className="filters">
                     <div className="sortFilter">
@@ -329,6 +370,10 @@ export const Feed = () => {
                     onExit={() => setModalOpen(false)}
                     onNext={onNext}
                     onPrevious={onPrevious}
+                    onRandom={onRandom}
+                    onStartAutoplay={onStartAutoplay}
+                    onStopAutoplay={onStopAutoplay}
+                    isAutoplayed={isAutoplayed}
                 />
             ) : null}
         </div>

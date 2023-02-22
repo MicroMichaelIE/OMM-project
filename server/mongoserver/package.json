@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "concurrently-await \"node --experimental-modules index.mjs\" \"mongorestore mongodb://127.0.0.1:65535 --db omm-ws2223 .\\data\\ await --delay 2000\""
+    "start": "concurrently-await \"node index.mjs\" \"mongorestore mongodb://127.0.0.1:65535 --db omm-ws2223 .\\data\\ await --delay 2000\""
   },
   "keywords": [],
   "author": "",

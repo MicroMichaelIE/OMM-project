@@ -48,7 +48,7 @@ export const CommentSection = ({
             </div>
             <Form className='CommentForm' onSubmit={handleSubmit}>
                 <Form.Group controlId="commentForm.TextArea">
-                    <Form.Control as="textarea" rows={1} value={comment} onChange={(e) => setComment(e.target.value)} />
+                    <Form.Control as="textarea" rows={2} value={comment} onChange={(e) => setComment(e.target.value)} />
                 </Form.Group>
                 <Button variant="primary" type="submit">
                     Add Comment

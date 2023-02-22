@@ -4,7 +4,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 let refreshTokens = []
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
+const accessTokenSecret =
+    process.env.ACCESS_TOKEN_SECRET || '0F78EDF1-1E5E-47F9-A47E-0A115AFD19DD'
 
 export const generateJWT = (userAuth) => {
     try {
