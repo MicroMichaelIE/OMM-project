@@ -19,6 +19,19 @@ export const getMemesBackend = async (query?: string) => {
     }
 }
 
+export const getMemeByIdBackend = async (memeId: string) => {
+    const response = await fetch(`${URL}/memes/${memeId}`, {
+        method: 'GET',
+    })
+    const json = await response.json()
+
+    if (response.ok) {
+        return { ok: true, memes: json.memes }
+    } else {
+        return { ok: false, message: json.message }
+    }
+}
+
 interface MemeInteractionDetails {
     memeId: string
     interactionType: 'like' | 'unlike' | 'comment'

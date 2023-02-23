@@ -10,7 +10,6 @@ import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
 import templatesRouter from './routes/templates.js'
 import * as dotenv from 'dotenv'
-import multer from 'multer'
 
 var __dirname = path.resolve()
 

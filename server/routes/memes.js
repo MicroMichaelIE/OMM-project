@@ -7,18 +7,20 @@ import {
     getMemes,
     getMemesByUserId,
     getMemeAPI,
+    getMemesById,
     // getOneMemeUser,
     // uploadMemeTemplate,
 } from '../services/memes.js'
 import { upload } from '../config/multer.js'
 import { authenticateJWT } from '../services/auth/authentication.js'
-import { createMemeAPI } from '../services/templates.js'
+import { createMemeAPI, createMultipleMemeAPI } from '../services/templates.js'
 
 const router = Router()
 
 // router.get('/', getMemes)
 // router.get('/getMeme/:user/:id', getOneMemeUser)
 router.get('/getMemesUser', authenticateJWT, getMemesByUserId)
+router.get('/:id', getMemesById)
 // router.delete('/deleteitem/:id', deleteitem)
 // router.put('/updateitem/:id', updateitem)
 // router.post(
@@ -31,6 +33,7 @@ router.post('/saveImage', (req, res) => {
     upload(req, res, callBackHandling(createMeme))
 })
 router.post('/:id', authenticateJWT, createMemeAPI)
+router.post('/multi/:id', authenticateJWT, createMultipleMemeAPI)
 router.get('/', getMemeAPI)
 
 // Meme interaction

@@ -26,6 +26,7 @@ import { Settings } from './pages/Settings/Settings'
 import { Feed } from './pages/Feed/Feed'
 import { TemplateList } from './pages/Templates/Templates'
 import UploadPage from './pages/TemplateUpload/Main/Main'
+import { MemeViewer } from './pages/MemeViewer/MemeViewer'
 
 const updateSW = registerSW({
     immediate: true,

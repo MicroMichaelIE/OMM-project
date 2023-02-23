@@ -38,7 +38,7 @@ export const CommentSection = ({
             <div className={previewCommentsNumber > 3 ? "scrollComments" : 'comments'}>
                 {memeComments.length > 0 ? memeComments.slice(0, previewCommentsNumber).map((comment, index) =>
 
-                    <ViewComment key={comment.id} comment={comment} />
+                    <ViewComment key={comment._id} comment={comment} />
 
 
                 ) : <p className="noComments">No comments yet</p>}
