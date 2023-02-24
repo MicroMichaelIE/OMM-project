@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite'
 import { VitePWA } from 'vite-plugin-pwa'
+
+// DOCS
 export default defineConfig({
     plugins: [
         VitePWA({
@@ -14,7 +16,7 @@ export default defineConfig({
             },
             workbox: {
                 cleanupOutdatedCaches: false,
-                globPatterns: ['**\/*.{js,css,html,ico,png,svg}'],
+                globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
                 skipWaiting: true,
                 clientsClaim: true,
                 runtimeCaching: [

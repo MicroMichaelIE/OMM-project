@@ -22,6 +22,7 @@ export const TemplateList = () => {
   const getTemplates = async () => {
     const { ok, templates, message } = await getTemplatesBackend();
     if (ok) {
+
       setTemplates(templates);
       console.log(templates)
     } else {

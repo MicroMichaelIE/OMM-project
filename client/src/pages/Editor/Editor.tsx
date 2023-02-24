@@ -7,7 +7,7 @@ import { Buffer } from 'buffer'
 import { useNavigate } from 'react-router-dom'
 import './Editor.scss'
 import { Template } from '../../types/types'
-import { getTemplatesBackend } from '../../services/templateService'
+import { getTemplatesAPIBackend, getTemplatesBackend } from '../../services/templateService'
 import { templateURL } from '../../services/urlService'
 import { Icon } from '../../components/Icon/Icon'
 import { EntryText } from '../../components/Entry/EntryText/EntryText'
@@ -19,6 +19,7 @@ import { fontOptions } from './EditorComponents/Fonts'
 import { exportComponentAsJPEG, exportComponentAsPNG, exportComponentAsPDF } from 'react-component-export-image'
 import { position } from 'html2canvas/dist/types/css/property-descriptors/position'
 import { useLocalStorage } from '../../hooks/useLocalStorage'
+import { FilterSection } from '../../components/filterSection/FilterSection'
 
 
 export const Editor = () => {
@@ -53,6 +54,9 @@ export const Editor = () => {
     const [captions, setCaptions] = useState<string[]>([]);
 
     const generatedMemeRef = useRef<HTMLDivElement>(null);
+
+
+    const [queryString, setQueryString] = useState<string>('')
 
     const { getItem } = useLocalStorage()
 
@@ -90,18 +94,37 @@ export const Editor = () => {
         }
     }, [location])
 
-    const templatesToState = async () => {
-        const { ok, message, templates } = await getTemplatesBackend()
-        if (ok && templates) {
+    const getTemplates = async (paramQueryString: string) => {
+        const { templates, message, ok } = await getTemplatesAPIBackend(paramQueryString)
+
+
+        if (ok) {
             setAllTemplates(templates)
         } else {
             console.log(message)
         }
     }
 
-    useMemo(() => {
-        templatesToState()
-    }, [])
+    
+    useEffect(() => {
+        if (queryString === "") {
+            return
+        }
+        getTemplates(queryString)
+    }, [queryString])
+
+    // const templatesToState = async () => {
+    //     const { ok, message, templates } = await getTemplatesBackend()
+    //     if (ok && templates) {
+    //         setAllTemplates(templates)
+    //     } else {
+    //         console.log(message)
+    //     }
+    // }
+
+    // useMemo(() => {
+    //     templatesToState()
+    // }, [])
 
 
 
@@ -204,9 +227,10 @@ export const Editor = () => {
 
     return (
         <div className="Editor">
-            <div className="Canvas-Area">
+            <div className="Canvas-Area"
+                style={{}}>
 
-                <div ref={generatedMemeRef} className="Canvas" style={{ width: `70rem`, height: '42rem', backgroundColor: 'white', margin: ' 0 auto' }}>
+                <div ref={generatedMemeRef} className="Canvas" style={{ height: canvasHeight, width: canvasWidth, backgroundColor: 'white', margin: ' 0 auto' }}>
 
                     {
                         canvasRefs ?
@@ -262,7 +286,7 @@ export const Editor = () => {
                             setSelected={(optionName, optionValue) =>
                                 handleFontChange({ target: { value: optionValue } })
                             }
-                            id=""
+                            id="font"
                         />
                         <EntryText id="fontsize" name="fontsize" label="Font Size" value={size} onChange={handleSizeChange} type="number" />
                         <EntryText id="color" name="color" label="Color" value={color} onChange={handleColorChange} type="color" />
@@ -295,6 +319,7 @@ export const Editor = () => {
                 </button>
             )}
             <div className="templatesSideBar" style={{ display: sideBarClosed ? "none" : 'block' }}>
+                <FilterSection queryString={queryString} setQueryString={setQueryString} className={'editor-filter'} />
                 <div className="sideBarScroll">
                     {allTemplates.map((t) => (
                         <div
@@ -323,6 +348,6 @@ export const Editor = () => {
                     ))}
                 </div>
             </div>
-        </div>
+        </div >
     )
 }

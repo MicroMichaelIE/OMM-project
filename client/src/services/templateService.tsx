@@ -45,3 +45,21 @@ export const uploadTemplateBackend = async (
         return { ok: false, message: json.message }
     }
 }
+
+export const getTemplatesAPIBackend = async (query: string) => {
+    const url = query ? `${URL}/templates${query}` : `${URL}/templates`
+    const response = await fetch(url, {
+        method: 'GET',
+    })
+    const json = await response.json()
+
+    if (response.ok) {
+        if (json.templates.length === 0) {
+            return { ok: true, templates: [] }
+        } else {
+            return { ok: true, templates: json.templates }
+        }
+    } else {
+        return { ok: false, message: json.message }
+    }
+} 

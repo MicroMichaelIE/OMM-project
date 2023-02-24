@@ -8,6 +8,7 @@ const templateSchema = mongoose.Schema({
     fileFormat: { type: String },
     owner: { type: String, ref: 'User', required: true },
     date: { type: Date, default: Date.now },
+    uploadDate: { type: Date, default: Date.now },
     imageLocation: { type: String, required: true },
     published: { type: Boolean, default: false },
 })

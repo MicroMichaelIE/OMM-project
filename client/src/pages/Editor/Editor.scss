@@ -4,11 +4,12 @@
     padding-top: 10px;
 
     .Canvas-Area {
-        min-width: 70%;
+        min-width: 60%;
 
-        .Canvas{
+        .Canvas {
             display: flex;
             justify-content: center;
+            max-width: 1300px;
             align-items: center;
             background-color: #f5f5f5;
             border: 1px solid #e5e5e5;
@@ -16,22 +17,23 @@
             overflow: hidden;
         }
         .Canvas-Controls {
-          display: flex;
-          flex-direction: column;
+            padding-top: 2rem;
+            display: flex;
+            flex-direction: column;
 
-          .Labels {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 10px;
-          }
-          .Font {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            gap: 10px;
-            align-items: center;
-          }
+            .Labels {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+            }
+            .Font {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                gap: 10px;
+                align-items: center;
+            }
         }
     }
 
@@ -49,7 +51,7 @@
     }
     .templatesSideBar {
         margin-right: 3%;
-        width: 30%;
+        width: 38%;
         margin-top: 20px;
         height: calc(85vh - 20px);
 

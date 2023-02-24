@@ -4,6 +4,7 @@ import {
     uploadTemplates,
     getTemplates,
     getTemplateById,
+    getTemplatesAPI,
 } from '../services/templates.js'
 
 import { upload } from '../config/multer.js'
@@ -33,7 +34,7 @@ router.post(
     uploadTemplates
 )
 // router.use(express.static('server/public'))
-router.get('/', getTemplates)
+router.get('/', getTemplatesAPI)
 router.get('/:id', getTemplateById)
 
 export default router
