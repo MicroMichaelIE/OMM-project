@@ -43,3 +43,4 @@ server/public/
 
 # vite build output
 dist
+client/dev-dist

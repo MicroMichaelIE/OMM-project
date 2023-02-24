@@ -54,7 +54,7 @@ export const getMemeByIdBackend = async (memeId: string) => {
     }
 }
 
-interface MemeInteractionDetails {
+export interface MemeInteractionDetails {
     memeId: string
     interactionType: 'like' | 'unlike' | 'comment'
     comment?: newComment | oldComment
@@ -136,5 +136,22 @@ export const uploadImagesBackend = async (
         return { ok: true }
     } else {
         return { ok: false }
+    }
+}
+
+export const makeMemePrivateBackend = async (memeId: string) => {
+    const token = localStorage.getItem('token')
+    const response = await fetch(`${URL}/memes/${memeId}/private`, {
+        method: 'PUT',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    const json = await response.json()
+
+    if (response.ok) {
+        return { ok: true, updatedMeme: json.updatedMeme }
+    } else {
+        return { ok: false, message: json.message }
     }
 }

@@ -20,7 +20,7 @@ export const ViewComment = ({ comment }: ViewCommentProps) => {
     return (
         <div className="ViewComment">
             <div className='usernameDiv'>
-                <p className="username">{comment.owner.username}</p>
+                <p className="username">{comment.owner.username ? comment.owner.username : 'Unknown'}</p>
             </div>
             <div className="text">
                 <p>{truncate(comment.text, 100, " Read More ...")}</p>

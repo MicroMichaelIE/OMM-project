@@ -161,7 +161,7 @@ export const FileTemplateUpload = ({
 
                 <Form.Group>
                     <Form.Label>Template</Form.Label>
-                    <Form.Control type="file" onChange={MemeUpload} multiple />
+                    <Form.Control type="file" onChange={MemeUpload} multiple required/>
                 </Form.Group>
                 <Button type="submit" variant="primary">
                     Upload

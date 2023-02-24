@@ -8,12 +8,14 @@ import { ViewComment } from "./ViewComment/ViewComment";
 
 interface CommentSectionProps {
     memeId: string;
+    canComment: boolean;
     memeComments: Meme['comments']
     onCommentSubmit: (memeId: string, newComment: newComment) => void
     previewCommentsNumber?: number
 }
 
 export const CommentSection = ({
+    canComment,
     memeId,
     memeComments,
     onCommentSubmit,
@@ -38,7 +40,7 @@ export const CommentSection = ({
             <div className={previewCommentsNumber > 3 ? "scrollComments" : 'comments'}>
                 {memeComments.length > 0 ? memeComments.slice(0, previewCommentsNumber).map((comment, index) =>
 
-                    <ViewComment key={comment._id} comment={comment} />
+                    <ViewComment key={comment.id} comment={comment} />
 
 
                 ) : <p className="noComments">No comments yet</p>}
@@ -46,14 +48,15 @@ export const CommentSection = ({
                 </div>
                 {/* {memeComments.length > previewCommentsNumber ? <p>View all {memeComments.length} comments</p> : null} */}
             </div>
-            <Form className='CommentForm' onSubmit={handleSubmit}>
-                <Form.Group controlId="commentForm.TextArea">
-                    <Form.Control as="textarea" rows={2} value={comment} onChange={(e) => setComment(e.target.value)} />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Add Comment
-                </Button>
-            </Form>
+            {canComment &&
+                <Form className='CommentForm' onSubmit={handleSubmit}>
+                    <Form.Group controlId="commentForm.TextArea">
+                        <Form.Control as="textarea" rows={2} value={comment} onChange={(e) => setComment(e.target.value)} />
+                    </Form.Group>
+                    <Button variant="primary" type="submit">
+                        Add Comment
+                    </Button>
+                </Form>}
         </div >
     )
 }

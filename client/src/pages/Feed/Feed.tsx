@@ -8,7 +8,9 @@ import { Icon } from '../../components/Icon/Icon'
 import useAuth from '../../hooks/useAuth'
 import {
     getMemesBackend,
+    makeMemePrivateBackend,
     MemeInteractionBackend,
+    MemeInteractionDetails,
 } from '../../services/memeService'
 import { LoggedInUser, Meme, newComment } from '../../types/types'
 import { MemeViewer } from '../MemeViewer/MemeViewer'
@@ -119,6 +121,12 @@ export const Feed = () => {
     }
 
     const onComment = async (memeId: string, commentInfo: newComment) => {
+        const MemeInteractionDetails: MemeInteractionDetails = {
+            memeId: memeId,
+            interactionType: 'comment',
+            comment: commentInfo,
+        }
+
         const { ok, message, updatedMeme } = await MemeInteractionBackend({
             memeId: memeId,
             interactionType: 'comment',
@@ -293,6 +301,20 @@ export const Feed = () => {
     }, [queryString])
 
 
+    const makeMemePrivate = async (meme: Meme) => {
+        const { ok, message, updatedMeme } = await makeMemePrivateBackend(meme._id)
+
+        if (ok) {
+            const newMemes = [...stateMemes]
+            const index = newMemes.findIndex((m) => m._id === updatedMeme._id)
+            newMemes[index] = updatedMeme
+            setMemes(newMemes)
+        } else {
+            console.log(message)
+        }
+    }
+
+
 
     return (
         <div className="Feed">
@@ -362,6 +384,7 @@ export const Feed = () => {
                             onLike={onLike}
                             onUnlike={onUnlike}
                             onComment={onComment}
+                            onPrivate={makeMemePrivate}
                             onShare={onShare}
                             onImageClick={onMemeClick}
                         />
@@ -371,6 +394,7 @@ export const Feed = () => {
             {stateMemes.length === 0 ? <h2>No memes found</h2> : null}
             {modalOpen ? (
                 <MemeViewer
+                    user={user}
                     currentImageIndex={modalMemeIndex + 1}
                     totalImages={stateMemes.length - 1}
                     onCommentSubmit={onComment}

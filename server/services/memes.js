@@ -19,6 +19,9 @@ export const getMemes = async (req, res) => {
         payload.memeOwner = memeOwner
     }
 
+    payload.draft = false
+    payload.private = false
+
     try {
         const memes = await Meme.find(payload, { draft: false })
             .sort({ _id: 1 })
@@ -180,6 +183,7 @@ export const getMemesById = async (req, res) => {
  * @throws {Object} - Response object containing error message
  */
 
+// {{URL}}/memes?name=YaBOY&sort=asc&limit=4
 export const getMemeAPI = async (req, res) => {
     const query = req.query
     const { sort, limit, name, url, id, fileformat } = query
@@ -200,6 +204,9 @@ export const getMemeAPI = async (req, res) => {
     if (fileformat) {
         params.fileFormat = `.${fileformat}`
     }
+
+    params.private = false
+    params.draft = false
 
     try {
         const memes = await Meme.find(params)
@@ -334,6 +341,31 @@ export const deleteCommentMeme = async (req, res) => {
             { new: true }
         )
         res.status(200)
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+export const MakeMemePrivate = async (req, res) => {
+    const id = req.params.id
+    const userId = req.user_id
+
+    try {
+        const meme = await Meme.findById(id)
+        if (meme) {
+            if (meme.owner === userId) {
+                if (meme.private === true) {
+                    meme.private = false
+                } else {
+                    meme.private = true
+                }
+
+                const newMeme = await meme.save()
+                res.status(200).json({ updatedMeme: newMeme })
+            }
+        } else {
+            res.status(403)
+        }
     } catch (error) {
         res.status(404).json({ message: error.message })
     }
