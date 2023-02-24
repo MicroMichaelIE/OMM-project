@@ -1,6 +1,12 @@
 import { newComment, oldComment } from '../types/types'
 import { URL } from './urlService'
 
+/**
+ * @param query - query string to filter memes
+ * @returns {ok: boolean, memes: Meme[]}
+ * @returns {ok: boolean, message: string}
+ */
+
 export const getMemesBackend = async (query?: string) => {
     const url = query ? `${URL}/memes${query}` : `${URL}/memes`
     const response = await fetch(url, {
@@ -14,6 +20,22 @@ export const getMemesBackend = async (query?: string) => {
         } else {
             return { ok: true, memes: json.memes }
         }
+    } else {
+        return { ok: false, message: json.message }
+    }
+}
+
+export const getMemesByUserBackend = async (userId: string) => {
+    const response = await fetch(`${URL}/memes/user/${userId}`, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    const json = await response.json()
+
+    if (response.ok) {
+        return { ok: true, memes: json.memes }
     } else {
         return { ok: false, message: json.message }
     }

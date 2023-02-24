@@ -32,6 +32,7 @@ router.get('/:id', getMemesById)
 router.post('/saveImage', (req, res) => {
     upload(req, res, callBackHandling(createMeme))
 })
+router.get('/user/:id', authenticateJWT, getMemesByUserId)
 router.post('/:id', authenticateJWT, createMemeAPI)
 router.post('/multi/:id', authenticateJWT, createMultipleMemeAPI)
 router.get('/', getMemeAPI)
