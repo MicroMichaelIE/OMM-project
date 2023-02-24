@@ -9,4 +9,6 @@ declare module '*.png'
 declare module '*.svg'
 declare module '*.gif'
 declare module 'image-capture';
+declare module 'lodash.debounce'
+declare module 'react-resizable'
 

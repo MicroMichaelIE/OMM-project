@@ -38,6 +38,7 @@ export type Meme = {
         id: string
         username: string
     }
+    image: Buffer
     imageLocation: string
     uploadDate: string
     private: boolean
@@ -53,7 +54,8 @@ export type Meme = {
             postedDate: string
             text: string
         }
-    ]
+    ];
+    templateId: string; // new property
 }
 
 export type newComment = {
@@ -68,4 +70,18 @@ export interface oldComment extends newComment {
     }
     postedDate: string
     text: string
+}
+
+export type Textbox = {
+    id: string;
+    text: string;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    font: string;
+    fontSize: number;
+    fontColor: string;
+    backgroundColor: string;
+    [key: string]: any; // This is the index signature
 }
