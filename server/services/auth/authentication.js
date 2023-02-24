@@ -3,9 +3,17 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-let refreshTokens = []
+// This line is here so that if there's no .env file, it will use the default value. This is for testing purposes.
 const accessTokenSecret =
     process.env.ACCESS_TOKEN_SECRET || '0F78EDF1-1E5E-47F9-A47E-0A115AFD19DD'
+
+/**
+ * @description Generate JWT token
+ * @param {Object} userAuth userAuth is type from frontend (username, password)
+ * @returns {string} token
+ * @returns {null} if error
+ * @example const token = generateJWT(userAuth)
+ */
 
 export const generateJWT = (userAuth) => {
     try {
@@ -25,6 +33,17 @@ export const generateJWT = (userAuth) => {
     }
 }
 
+/**
+ * Verify JWT token
+ * @description Verify JWT token and next if valid
+ * @param {Object} req
+ * @param {Object} res
+ * @param {Object} next
+ * @returns {Object} res
+ * @returns {Object} next
+ * @example router.get('/getMemesUser', authenticateJWT, getMemesByUserId)
+ */
+
 export const authenticateJWT = (req, res, next) => {
     const authHeader = req.headers.authorization
     if (authHeader) {
@@ -41,31 +60,4 @@ export const authenticateJWT = (req, res, next) => {
     } else {
         res.sendStatus(401)
     }
-}
-
-export const getToken = (req, res) => {
-    const token = req.body.token
-    if (!token) {
-        return res.sendStatus(401)
-    }
-
-    if (!refreshTokens.includes(token)) {
-        return res.sendStatus(403)
-    }
-
-    jwt.verify(token, (err, user) => {
-        if (err) {
-            return res.sendStatus(403)
-        } else {
-            const accessToken = jwt.sign(
-                { username: user.username },
-                accessTokenSecret,
-                { expiresIn: '15m' }
-            )
-
-            res.status(200).json({
-                accessToken,
-            })
-        }
-    })
 }

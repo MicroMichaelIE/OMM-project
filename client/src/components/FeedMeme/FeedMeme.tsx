@@ -11,16 +11,16 @@ import { CommentSection } from './FeedMemeComments/CommentSection'
 interface FeedMemeProps {
     meme: Meme
     user: LoggedInUser
-    onLike: (meme: Meme) => void
-    onUnlike: (meme: Meme) => void
-    onComment: (memeId: string, comment: newComment) => void
-    onShare: (meme: Meme) => void
-    onImageClick: (e: React.SyntheticEvent<HTMLElement>, meme: Meme) => void
+    onLike?: (meme: Meme) => void
+    onUnlike?: (meme: Meme) => void
+    onComment?: (memeId: string, comment: newComment) => void
+    onShare?: (meme: Meme) => void
+    onImageClick?: (e: React.SyntheticEvent<HTMLElement>, meme: Meme) => void
 }
 
 export const FeedMeme = ({
     meme,
-    user, 
+    user,
     onLike,
     onUnlike,
     onComment,
@@ -53,10 +53,26 @@ export const FeedMeme = ({
         }
     }
 
+    const handleFunctions = (meme: Meme, func: any) => {
+        if (func) {
+            func(meme)
+        } else {
+            console.log('function not passed')
+        }
+    }
+
+    const handleImageClick = (e: React.SyntheticEvent<HTMLElement>, meme: Meme) => {
+        if (onImageClick) {
+            onImageClick(e, meme)
+        } else {
+            console.log('function not passed')
+        }
+    }
+
     return (
         <BlankCard>
             <div className="Top">
-                <div className="Top_Image" onClick={(e) => onImageClick(e, meme)}>
+                <div className="Top_Image" onClick={(e) => handleImageClick(e, meme)}>
                     <img src={`${templateURL}/${meme.imageLocation}`} alt="meme" />
                 </div>
 
@@ -72,10 +88,10 @@ export const FeedMeme = ({
                 </div>
                 <div className="interactions">
                     <div className="like">
-                        {!stateHasLiked ? (<button onClick={() => onLike(meme)}>
+                        {!stateHasLiked ? (<button onClick={() => handleFunctions(meme, onLike)}>
                             <Icon name="thumb_up" />
                         </button>)
-                            : (<button onClick={() => onUnlike(meme)}>
+                            : (<button onClick={() => handleFunctions(meme, onUnlike)}>
                                 <Icon name="thumb_down" />
                             </button>)
                         }
@@ -86,13 +102,13 @@ export const FeedMeme = ({
                         <p>{meme.comments.length}</p>
                     </div>
                     <div className="share">
-                        <button onClick={() => onShare(meme)}>
+                        <button onClick={() => handleFunctions(meme, onShare)}>
                             <Icon name="share" />
                         </button>
 
                     </div>
                 </div>
-                <CommentSection memeId={meme._id} onCommentSubmit={onComment} memeComments={meme.comments} />
+                <CommentSection memeId={meme._id} onCommentSubmit={() => handleFunctions(meme, onComment)} memeComments={meme.comments} />
             </div>
         </BlankCard >
     )

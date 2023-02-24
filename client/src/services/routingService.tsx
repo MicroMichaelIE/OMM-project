@@ -11,7 +11,7 @@ interface ProtectedLoginRouteProps {
 
 export const ProtectedLoginRoute = ({
     // accessLevel = 'Both',
-    redirectPath = '/login',
+    redirectPath = '/feed',
     children,
 }: ProtectedLoginRouteProps): JSX.Element => {
     const { loadingInitial, isAuthenticated } = useAuth()

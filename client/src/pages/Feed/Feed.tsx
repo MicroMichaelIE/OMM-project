@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from 'react'
+import { useState, useMemo, useEffect, useRef, useLayoutEffect } from 'react'
 import { Button, Dropdown, DropdownButton, Modal } from 'react-bootstrap'
 import { useNavigate, Outlet } from 'react-router-dom'
 import EntryDropdown from '../../components/Entry/EntryDropdown/EntryDropdown'
@@ -44,6 +44,7 @@ export const Feed = () => {
 
     const { getUser } = useAuth()
 
+
     const sortFilters = [
         { value: 'desc', display: 'Newest' },
         { value: 'asc', display: 'Oldest' },
@@ -62,9 +63,8 @@ export const Feed = () => {
         { value: 'gif', display: 'GIF' },
     ]
 
-    const getMemes = async () => {
-        const { user } = await getUser()
-        const { memes, message, ok } = await getMemesBackend(queryString)
+    const getMemes = async (paramQueryString: string) => {
+        const { memes, message, ok } = await getMemesBackend(paramQueryString)
         console.log(memes)
 
         if (ok) {
@@ -72,20 +72,25 @@ export const Feed = () => {
         } else {
             console.log(message)
         }
+    }
+
+    const getUserAsync = async () => {
+        const { user } = await getUser()
         if (user) {
             setUser(user)
         }
     }
 
     useEffect(() => {
+        getUserAsync()
+    }, [])
+
+    useEffect(() => {
         formatQuery()
         // dont use name filter here so we can make less calls to the backend
     }, [sortSelected, limitSelected, fileFormatSelected])
 
-    useEffect(() => {
-        getMemes()
-        console.log(queryString)
-    }, [queryString])
+
 
     const onLike = async (meme: Meme) => {
         const { ok, message, updatedMeme } = await MemeInteractionBackend({
@@ -134,7 +139,6 @@ export const Feed = () => {
     // https://stackoverflow.com/questions/1714786/query-string-encoding-of-a-javascript-object
 
     const formatQuery = () => {
-        console.log(query)
         let array = []
         let params
         for (const p in query)
@@ -269,7 +273,6 @@ export const Feed = () => {
     const timerRef = useRef<ReturnType<typeof setInterval>>();
 
     useEffect(() => {
-        console.log('dirty solution')
         if (isAutoplayed) {
             timerRef.current = setInterval(() => {
                 setModalMemeIndex((prevIndex) =>
@@ -282,7 +285,12 @@ export const Feed = () => {
         return () => clearInterval(timerRef.current)
     }, [isAutoplayed, modalMemeIndex])
 
-
+    useEffect(() => {
+        if (queryString === "") {
+            return
+        }
+        getMemes(queryString)
+    }, [queryString])
 
 
 

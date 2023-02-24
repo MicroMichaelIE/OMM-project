@@ -2,6 +2,13 @@ import Meme from '../models/memes.js'
 import mongoose from 'mongoose'
 
 // Allows us to get all memes, or just ones by a specific user
+
+/**
+  Gets all memes, optionally filtered by memeOwner.
+ * @param {object} req - Request object.
+ * @param {object} res - Response object.
+ * @returns {object} - Memes object containing an array of memes.
+ */
 export const getMemes = async (req, res) => {
     const query = req.query
     const { memeOwner } = query
@@ -24,6 +31,13 @@ export const getMemes = async (req, res) => {
     }
 }
 
+/**
+ * Gets a single meme by ID.
+ * @param {object} req - Request object.
+ * @param {object} res - Response object.
+ * @returns {object} - Meme object.
+ */
+
 export const getMeme = async (req, res) => {
     const id = req.params.id
 
@@ -40,6 +54,15 @@ export const getMeme = async (req, res) => {
         res.status(404).json({ message: e.message })
     }
 }
+
+/**
+ * CURRENTLY UNUSED
+ * Creates a new meme.
+ * @description File is contained in the request body
+ * @param {object} req. - Request object.
+ * @param {object} res - Response object.
+ * @returns {object} - New meme object.
+ */
 
 export const createMeme = async (req, res) => {
     const file = req.file
@@ -66,6 +89,13 @@ export const createMeme = async (req, res) => {
     }
 }
 
+/**
+ * Deletes a meme by ID.
+ * @description Id is contained in the request params
+ * @param {object} req - Request object.
+ * @param {object} res - Response object.
+ * @returns {object} - Success message.
+ */
 export const deletememe = async (req, res) => {
     const _id = req.params.id
     try {
@@ -75,6 +105,13 @@ export const deletememe = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+/**
+ * Updates a meme by ID.
+ * @param {object} req - Request object.
+ * @param {object} res - Response object.
+ * @returns {object} - Updated meme
+ */
 
 export const updateMeme = async (req, res) => {
     const id = req.params.id
@@ -87,6 +124,16 @@ export const updateMeme = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+/**
+
+Retrieve memes by user ID
+* @description Get all memes uploaded by a user
+* @param {Object} req - Express request object containing user ID
+* @param {Object} res - Express response object
+* @returns {Object} - Response object containing memes belonging to the user
+* @throws {Object} - Response object containing error message
+*/
 
 export const getMemesByUserId = async (req, res) => {
     const userId = req._id
@@ -103,6 +150,35 @@ export const getMemesByUserId = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+/**
+ * Retrieve meme by ID
+ * @description Get a single meme by ID and populate with owner's user ID and username
+ * @param {Object} req - Express request object containing meme ID
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing requested meme
+ * @throws {Object} - Response object containing error message
+ */
+
+export const getMemesById = async (req, res) => {
+    const id = req.params.id
+    try {
+        const meme = await Meme.findById(id).populate('owner', '_id, username')
+        res.status(200).json({ memes: [meme] })
+    } catch {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+/**
+ * Retrieve memes via API
+ * Solves task 7 advanced.
+ * @description Get memes by name, image location, ID, or file format, and sort by upload date, with optional limit
+ * @param {Object} req - Express request object containing query parameters for filtering and sorting memes
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing requested memes
+ * @throws {Object} - Response object containing error message
+ */
 
 export const getMemeAPI = async (req, res) => {
     const query = req.query
@@ -143,6 +219,15 @@ export const getMemeAPI = async (req, res) => {
     }
 }
 
+/**
+ * Like a meme
+ * @description Add the user's ID to the list of likes for a meme
+ * @param {Object} req - Express request object containing meme ID and user ID
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing updated meme with the user's ID added to the list of likes
+ * @throws {Object} - Response object containing error message
+ */
+
 export const likeMeme = async (req, res) => {
     const id = req.params.id
     const userId = req.user_id
@@ -161,6 +246,15 @@ export const likeMeme = async (req, res) => {
     }
 }
 
+/**
+ * Unlike a meme
+ * @description Remove the user's ID from the list of likes for a meme
+ * @param {Object} req - Express request object containing meme ID and user ID
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing updated meme with the user's ID removed from the list of likes
+ * @throws {Object} - Response object containing error message
+ */
+
 export const unlikeMeme = async (req, res) => {
     const id = req.params.id
     const userId = req.user_id
@@ -177,6 +271,18 @@ export const unlikeMeme = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+/**
+ * Comment on a meme
+ * @description Add a comment to a meme with the user's ID as the owner
+ * @param {Object} req - Express request object containing meme ID, user ID, and comment text
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing updated meme with the comment added
+ * @throws {Object} - Response object containing error message
+ * @todo - Add validation for comment text
+ * @todo - Add validation for comment length
+ * @todo - Add validation for comment owner
+ */
 
 export const commentMeme = async (req, res) => {
     const id = req.params.id
@@ -201,6 +307,15 @@ export const commentMeme = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+/**
+ * Delete a comment on a meme
+ * @description Remove a comment from a meme with the user's ID as the owner
+ * @param {Object} req - Express request object containing meme ID, user ID, and comment ID
+ * @param {Object} res - Express response object
+ * @returns {Object} - Response object containing updated meme with the comment removed
+ * @throws {Object} - Response object containing error message
+ */
 
 export const deleteCommentMeme = async (req, res) => {
     const id = req.params.id

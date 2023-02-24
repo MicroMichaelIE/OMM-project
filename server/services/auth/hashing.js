@@ -1,6 +1,13 @@
 import bcrypt from 'bcrypt'
 const saltRounds = 10
 
+/**
+ * @description Generate hash from password
+ * @param {string} password
+ * @returns {string} hash
+ * @returns {null} if error
+ */
+
 export const generateHash = async (password) => {
     try {
         const salt = await bcrypt.genSalt(saltRounds)
@@ -11,6 +18,14 @@ export const generateHash = async (password) => {
         return null
     }
 }
+
+/**
+ * @description Compare password with hash
+ * @param {string} entryPassword
+ * @param {string} hashedPassword
+ * @returns {boolean} result
+ * @returns {null} if error
+ */
 
 export const compareHash = async (entryPassword, hashedPassword) => {
     let result = null

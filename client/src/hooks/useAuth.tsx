@@ -65,11 +65,12 @@ export function AuthProvider({
 
     // If we change page, reset the error state.
     useEffect(() => {
-        if (error !== '') setError('')
+        setError('')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
     const checkUserToken = useCallback(async () => {
+        console.log(isAuthenticated)
         const thisuserToken = !isAuthenticated ? getItem('token') : null
         try {
             if (thisuserToken) {
@@ -82,23 +83,25 @@ export function AuthProvider({
                     throw new Error(message)
                 }
             } else {
+                console.log('no token')
                 navigate('/login')
             }
         } catch (error) {
             let errorMessage = getErrorMessage(error)
             setError(errorMessage)
+            console.log(errorMessage)
             navigate('/login')
             return { ok: false }
         } finally {
             setLoadingInitial(false)
         }
-    }, [isAuthenticated, getItem, navigate])
+    }, [isAuthenticated])
 
 
     // Checks if the user is logged in and if so, sets the user
     useEffect(() => {
         checkUserToken()
-    }, [isAuthenticated])
+    }, [])
 
     const login = async (userForm: userAuth) => {
         setLoading(true)
