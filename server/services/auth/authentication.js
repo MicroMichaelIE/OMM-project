@@ -14,7 +14,7 @@ export const generateJWT = (userAuth) => {
                 username: userAuth.email,
                 password: userAuth.password,
             },
-            accessTokenSecret
+            process.env.ACCESS_TOKEN_SECRET
         )
 
         return token
@@ -29,7 +29,7 @@ export const authenticateJWT = (req, res, next) => {
     if (authHeader) {
         const token = authHeader.split(' ')[1]
         try {
-            const decoded = jwt.verify(token, accessTokenSecret)
+            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
             req.user_id = decoded._id
             next()
         } catch (err) {
@@ -58,7 +58,7 @@ export const getToken = (req, res) => {
         } else {
             const accessToken = jwt.sign(
                 { username: user.username },
-                accessTokenSecret,
+                process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '15m' }
             )
 
