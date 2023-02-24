@@ -1,0 +1,75 @@
+.editor-filter {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+
+    .nameFilter {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        gap: 0.5rem;
+
+        button {
+            margin-top: 1.2rem;
+        }
+    }
+    .filters {
+        display: flex;
+        gap: 0.3rem;
+
+        * > * > * > div {
+            height: auto;
+        }
+
+        .filterReset {
+            margin-top: 1rem;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            background: none;
+            > span {
+                color: black;
+                font-size: 3rem;
+            }
+        }
+    }
+}
+
+.feed-filter {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 1rem;
+    justify-content: space-between;
+
+    .nameFilter {
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        gap: 0.5rem;
+
+        button {
+            margin-top: 1.2rem;
+        }
+    }
+    .filters {
+        display: flex;
+        gap: 0.3rem;
+
+        * > * > * > div {
+            height: auto;
+        }
+
+        .filterReset {
+            margin-top: 1rem;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            background: none;
+            > span {
+                color: black;
+                font-size: 3rem;
+            }
+        }
+    }
+}

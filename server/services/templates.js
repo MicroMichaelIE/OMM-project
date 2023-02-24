@@ -300,7 +300,7 @@ export const uploadTemplates = async (req, res, next) => {
                     givenName: givenName || name,
                     name: name,
                     owner: req.user_id,
-                    date: Date.now(),
+                    uploadDate: Date.now(),
                     fileFormat: `${path.extname(file.filename)}`,
                     longerDescription: longerDescription,
                     imageLocation: path.join('templates', file.filename),
@@ -349,6 +349,39 @@ export const getTemplateById = async (req, res, next) => {
             return res.status(404).json({ error: 'Template not found' })
         }
         res.status(200).json({ template: template })
+    } catch (error) {
+        res.status(404).json({ message: error.message })
+    }
+}
+
+export const getTemplatesAPI = async (req, res) => {
+    const query = req.query
+    const { sort, limit, name, url, id, fileformat } = query
+
+    let params = {}
+    if (name) {
+        params.givenName = name
+    }
+
+    if (id) {
+        params._id = id
+    }
+
+    if (fileformat) {
+        params.fileFormat = `.${fileformat}`
+    }
+
+    try {
+        const templates = await MemeTemplate.find(params)
+            .populate('owner')
+            .sort({ uploadDate: sort })
+            .limit(limit)
+
+        if (templates.length === 0) {
+            return res.status(200).json({ templates: [] })
+        }
+
+        res.status(200).json({ templates: templates })
     } catch (error) {
         res.status(404).json({ message: error.message })
     }

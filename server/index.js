@@ -28,7 +28,7 @@ dotenv.config({
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
-const MONGODB_PORT = process.env.MONGODB_PORT || 27017
+const MONGODB_PORT = process.env.MONGODB_PORT || 65535 // 65535 is the default port for MongoDB
 console.log('MONGODB_PORT ' + MONGODB_PORT)
 // const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
 const connectionOptions = {

@@ -8,7 +8,9 @@ declare module '*.jpg'
 declare module '*.png'
 declare module '*.svg'
 declare module '*.gif'
-declare module 'image-capture'
+declare module 'image-capture';
+declare module 'lodash.debounce'
+declare module 'react-resizable'
 
 declare module 'virtual:pwa-register/react' {
     import type { Dispatch, SetStateAction } from 'react'

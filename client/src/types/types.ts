@@ -26,7 +26,7 @@ export interface Template {
     givenName: string
     name: string
     owner: string
-    date: Date
+    uploadDate: string
     imageLocation: string
     longerDescription?: string
     published: boolean
@@ -40,6 +40,7 @@ export type Meme = {
         _id: string
         username: string
     }
+    image: Buffer
     imageLocation: string
     longerDescription?: string
     uploadDate: string
@@ -57,6 +58,7 @@ export type Meme = {
             text: string
         }
     ]
+    templateId: string // new property
 }
 
 export type newComment = {
@@ -71,4 +73,18 @@ export interface oldComment extends newComment {
     }
     postedDate: string
     text: string
+}
+
+export type Textbox = {
+    id: string
+    text: string
+    x: number
+    y: number
+    width: number
+    height: number
+    font: string
+    fontSize: number
+    fontColor: string
+    backgroundColor: string
+    [key: string]: any // This is the index signature
 }
