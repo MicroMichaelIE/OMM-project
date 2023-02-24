@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { CommentSection } from "../../components/FeedMeme/FeedMemeComments/CommentSection";
 import { Icon } from "../../components/Icon/Icon";
 import { templateURL } from "../../services/urlService";
-import { Meme, newComment } from "../../types/types";
+import { LoggedInUser, Meme, newComment } from "../../types/types";
 
 import "./MemeViewer.scss";
 
@@ -11,6 +12,7 @@ interface MemeViewerProps {
     totalImages: number;
     meme: Meme;
     isAutoplayed: boolean;
+    user: LoggedInUser;
     onNext: () => void;
     onPrevious: () => void;
     onExit: () => void;
@@ -26,6 +28,7 @@ export const MemeViewer = (
         totalImages,
         meme,
         isAutoplayed,
+        user,
         onNext,
         onPrevious,
         onExit,
@@ -35,6 +38,15 @@ export const MemeViewer = (
         onStopAutoplay,
     }: MemeViewerProps
 ) => {
+
+    const [canComment, setCanComment] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (user._id == meme.owner._id) {
+            setCanComment(true);
+        }
+    }, [user]);
+
 
     const handleNext = () => {
         onNext();
@@ -83,7 +95,7 @@ export const MemeViewer = (
                         <div className="MemeInfo">
                             {meme.description}
                         </div>
-                        <CommentSection previewCommentsNumber={meme.comments.length} memeId={meme._id} onCommentSubmit={onCommentSubmit} memeComments={meme.comments} />
+                        <CommentSection canComment={canComment} previewCommentsNumber={meme.comments.length} memeId={meme._id} onCommentSubmit={onCommentSubmit} memeComments={meme.comments} />
                     </div>
                 </div>
             </Modal.Body>

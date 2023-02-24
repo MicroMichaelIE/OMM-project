@@ -8,6 +8,7 @@ import {
     getMemesByUserId,
     getMemeAPI,
     getMemesById,
+    MakeMemePrivate,
     // getOneMemeUser,
     // uploadMemeTemplate,
 } from '../services/memes.js'
@@ -36,6 +37,8 @@ router.get('/user/:id', authenticateJWT, getMemesByUserId)
 router.post('/:id', authenticateJWT, createMemeAPI)
 router.post('/multi/:id', authenticateJWT, createMultipleMemeAPI)
 router.get('/', getMemeAPI)
+
+router.put('/:id/private', authenticateJWT, MakeMemePrivate)
 
 // Meme interaction
 router.put('/:id/like', authenticateJWT, likeMeme)

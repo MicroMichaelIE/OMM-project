@@ -37,11 +37,11 @@ export type Meme = {
     givenName: string
     description: string
     owner: {
-        id: string
+        _id: string
         username: string
     }
     imageLocation: string
-    longerDesription?: string
+    longerDescription?: string
     uploadDate: string
     private: boolean
     draft: boolean

@@ -206,11 +206,11 @@ export const createMultipleMemeAPI = async (req, res) => {
         res.status(404).json({ message: 'Error in Tempalte' })
     }
 
-    const imageName = template.imageLocation
-
-    const imagePath = path.join(pathToPublic, imageName)
-
     try {
+        const imageName = template.imageLocation
+
+        const imagePath = path.join(pathToPublic, imageName)
+
         const { fontName, captions, givenName } = body
 
         const fullFontName = `${fontName}.fnt`
