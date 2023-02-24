@@ -223,3 +223,43 @@ export const deleteCommentMeme = async (req, res) => {
         res.status(404).json({ message: error.message })
     }
 }
+
+export const uploadMemes = async (req, res, next) => {
+    console.log('I GET HERE')
+    try {
+        const { files } = req
+        const memePaths = []
+        const givenName = req.body.givenName
+
+        await Promise.all(
+            files.map(async (file) => {
+                const { originalname } = file
+                const name = originalname.split('.')[0]
+                console.log(file.filename)
+                // const location = path.join('templates', file.filename)
+
+                const newMeme = new Meme({
+                    givenName: givenName || name,
+                    description: description,
+                    owner: req.user_id,
+                    usedTemplate: usedTemplate,
+                    fileFormat: fileFormat,
+                    imageLocation: path.join('meme', file.filename),
+                    captions: captions,
+                    uploadDate: Date.now(),
+                    private: privateBoolean,
+                    draft: draftBoolean,
+                    likes: likes,
+                    comments: comments,
+                })
+
+                const savedMeme = await newMeme.save()
+
+                memePaths.push(savedMeme._id.toString())
+            })
+        )
+        res.status(201).json({ memePaths })
+    } catch (error) {
+        return res.status(500).json({ error: error.message })
+    }
+}
