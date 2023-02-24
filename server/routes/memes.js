@@ -1,3 +1,5 @@
+import express from 'express'
+import multer from 'multer'
 import { Router } from 'express'
 import {
     createMeme,
@@ -7,6 +9,7 @@ import {
     getMemes,
     getMemesByUserId,
     getMemeAPI,
+    uploadMemes,
     getMemesById,
     MakeMemePrivate,
     // getOneMemeUser,
@@ -17,6 +20,8 @@ import { authenticateJWT } from '../services/auth/authentication.js'
 import { createMemeAPI, createMultipleMemeAPI } from '../services/templates.js'
 
 const router = Router()
+
+const arrayUpload = upload.array('template', 12)
 
 // router.get('/', getMemes)
 // router.get('/getMeme/:user/:id', getOneMemeUser)
@@ -30,10 +35,28 @@ router.get('/:id', getMemesById)
 //     upload.array('files'),
 //     uploadMemeTemplate
 // )
-router.post('/saveImage', (req, res) => {
-    upload(req, res, callBackHandling(createMeme))
-})
-router.get('/user/:id', authenticateJWT, getMemesByUserId)
+// router.post('/saveImage', (req, res) => {
+//     upload(req, res, callBackHandling(createMeme))
+// })
+
+router.post(
+    '/saveImage',
+    authenticateJWT,
+    (req, res, next) => {
+        arrayUpload(req, res, function (err) {
+            if (err instanceof multer.MulterError) {
+                console.log(err)
+                return res.send('Error with multer')
+            } else if (err) {
+                console.log('Error during upload')
+                return res.status(500).json({ error: err.message })
+            }
+            // Always null here?!?!
+            next()
+        })
+    },
+    uploadMemes
+)
 router.post('/:id', authenticateJWT, createMemeAPI)
 router.post('/multi/:id', authenticateJWT, createMultipleMemeAPI)
 router.get('/', getMemeAPI)
