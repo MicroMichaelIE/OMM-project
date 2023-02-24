@@ -1,69 +1,115 @@
 import { BlankCard } from '../BlankCard/BlankCard'
 import { Icon } from '../Icon/Icon'
-import { Meme } from '../../types/types'
+import { LoggedInUser, Meme, newComment } from '../../types/types'
+import { templateURL } from '../../services/urlService'
+import useAuth from '../../hooks/useAuth'
+import './FeedMeme.scss'
+import { useEffect, useState } from 'react'
+import { Button, Form } from 'react-bootstrap'
+import { CommentSection } from './FeedMemeComments/CommentSection'
 
 interface FeedMemeProps {
     meme: Meme
-    onLike: (meme: Meme) => void
-    onDislike: (meme: Meme) => void
-    onComment: (meme: Meme) => void
-    onShare: (meme: Meme) => void
-    onEdit: (meme: Meme) => void
-    onDelete: (meme: Meme) => void
+    user: LoggedInUser
+    onLike?: (meme: Meme) => void
+    onUnlike?: (meme: Meme) => void
+    onComment?: (memeId: string, comment: newComment) => void
+    onShare?: (meme: Meme) => void
+    onImageClick?: (e: React.SyntheticEvent<HTMLElement>, meme: Meme) => void
 }
 
 export const FeedMeme = ({
     meme,
+    user,
     onLike,
-    onDislike,
+    onUnlike,
     onComment,
     onShare,
-    onEdit,
-    onDelete,
+    onImageClick,
 }: FeedMemeProps): JSX.Element => {
+    const [stateHasLiked, setStateHasLiked] = useState<boolean>(false)
+
+
+    useEffect(() => {
+        hasLiked(meme)
+    }, [meme])
+
+
+    const toDateToString = (date: string): string => {
+        const dateObj = new Date(date)
+        return dateObj.toLocaleDateString(
+
+        )
+    }
+
+    const hasLiked = async (meme: Meme) => {
+        if (user && user._id) {
+            const Id = user._id
+            // console.log(meme.likes.some(el => { console.log(el._id); el._id === user._id }))
+            // meme.likes.some(el => el._id === user._id) ? setStateHasLiked(true) : setStateHasLiked(false)
+            meme.likes.includes(Id) ? setStateHasLiked(true) : setStateHasLiked(false)
+        } else {
+            setStateHasLiked(false)
+        }
+    }
+
+    const handleFunctions = (meme: Meme, func: any) => {
+        if (func) {
+            func(meme)
+        } else {
+            console.log('function not passed')
+        }
+    }
+
+    const handleImageClick = (e: React.SyntheticEvent<HTMLElement>, meme: Meme) => {
+        if (onImageClick) {
+            onImageClick(e, meme)
+        } else {
+            console.log('function not passed')
+        }
+    }
+
     return (
         <BlankCard>
-            <div className="Top_Image">
-                <img src={meme.image} alt="meme" />
+            <div className="Top">
+                <div className="Top_Image" onClick={(e) => handleImageClick(e, meme)}>
+                    <img src={`${templateURL}/${meme.imageLocation}`} alt="meme" aria-description={meme.longerDescription} />
+                </div>
+
             </div>
             <div className="Bottom">
-                <div className="interactions">
-                    <div className="like">
-                        <button onClick={() => onLike(meme)}>
-                            <Icon name="thumb_up" />
-                        </button>
-                        <p>{meme.likes}</p>
-                    </div>
-                    <div className="dislike">
-                        <button onClick={() => onDislike(meme)}>
-                            <Icon name="thumb_down" />
-                        </button>
-                        <p>{meme.dislikes}</p>
-                    </div>
-                    <div className="comment">
-                        <button onClick={() => onComment(meme)}>
-                            <Icon name="comment" />
-                        </button>
-                        <p>{meme.comments.length}</p>
-                    </div>
-                    <div className="share">
-                        <button onClick={() => onShare(meme)}>
-                            <Icon name="share" />
-                        </button>
-                    </div>
+                <div className="BottomContent">
+                    <p>{meme.owner.username}</p>
+                    <p>{toDateToString(meme.uploadDate)}</p>
+
                 </div>
                 <div className="description">
                     <p>{meme.description}</p>
                 </div>
-                <div className="actions">
-                    <button onClick={() => onEdit(meme)}>
-                        <Icon name="edit" />
-                    </button>
-                    <button onClick={() => onDelete(meme)}>
-                        <Icon name="delete" />
-                    </button>
+                <div className="interactions">
+                    <div className="like">
+                        {!stateHasLiked ? (<button onClick={() => handleFunctions(meme, onLike)}>
+                            <Icon name="thumb_up" />
+                        </button>)
+                            : (<button onClick={() => handleFunctions(meme, onUnlike)}>
+                                <Icon name="thumb_down" />
+                            </button>)
+                        }
+                        <p>{meme.likes.length}</p>
+                    </div>
+                    <div className="comment">
+                        <Icon name="comment" />
+                        <p>{meme.comments.length}</p>
+                    </div>
+                    <div className="share">
+                        <button onClick={() => handleFunctions(meme, onShare)}>
+                            <Icon name="share" />
+                        </button>
+
+                    </div>
                 </div>
+                <CommentSection memeId={meme._id} onCommentSubmit={() => handleFunctions(meme, onComment)} memeComments={meme.comments} />
             </div>
-        </BlankCard>
+        </BlankCard >
     )
 }

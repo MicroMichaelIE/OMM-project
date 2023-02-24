@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { Spinner } from '../components/Spinner/Spinner'
 import useAuth from '../hooks/useAuth'
@@ -10,20 +11,18 @@ interface ProtectedLoginRouteProps {
 
 export const ProtectedLoginRoute = ({
     // accessLevel = 'Both',
-    redirectPath = '/login',
+    redirectPath = '/feed',
     children,
 }: ProtectedLoginRouteProps): JSX.Element => {
-    const { loadingInitial, checkToken } = useAuth()
+    const { loadingInitial, isAuthenticated } = useAuth()
 
     //const hasAccess = user.roles.includes(accessLevel)
     //const isAllowed = user.token && hasAccess
 
-    const isAllowed = checkToken().then((res) => {
-        return res.ok
-    })
+
 
     if (!loadingInitial) {
-        if (!isAllowed) {
+        if (!isAuthenticated) {
             return <Navigate to={redirectPath} replace />
         }
 

@@ -10,7 +10,7 @@ export interface Props {
     zIndex?: number;
     isAutoFocused?: boolean;
     isRequired?: boolean;
-    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    onChange: (e: React.ChangeEvent<HTMLTextAreaElement>, index?: number) => void;
 }
 
 export const EntryTextArea = (props: Props): JSX.Element => {

@@ -1,19 +1,35 @@
 import createError from 'http-errors'
-import express, { json } from 'express'
+import express from 'express'
 import cookieParser from 'cookie-parser'
 import logger from 'morgan'
 import path from 'path'
 import cors from 'cors'
-import bodyParser from 'body-parser'
 import mongoose from 'mongoose'
 
 import memesRouter from './routes/memes.js'
 import usersRouter from './routes/users.js'
+import templatesRouter from './routes/templates.js'
+import * as dotenv from 'dotenv'
+
+var __dirname = path.resolve()
+
+console.log(__dirname)
+
+if (__dirname.includes('server')) {
+    __dirname = path.resolve(__dirname, '../')
+}
+
+console.log(__dirname)
+
+dotenv.config({
+    path: path.resolve(__dirname, '../.env'),
+})
 
 // ##### IMPORTANT
 // ### Your backend project has to switch the MongoDB port like this
 // ### Thus copy paste this block to your project
-const MONGODB_PORT = process.env.DBPORT || '27017'
+const MONGODB_PORT = process.env.MONGODB_PORT || 65535
+console.log('MONGODB_PORT ' + MONGODB_PORT)
 // const db = monk(`127.0.0.1:${MONGODB_PORT}/omm-ws2223`) // connect to database omm-2021
 const connectionOptions = {
     useNewUrlParser: true,
@@ -27,7 +43,7 @@ mongoose
         connectionOptions
     )
     .then(() => {
-        console.log('Connected to MongoDB')
+        console.log('Connected to MongoDB on port', MONGODB_PORT, '')
     })
     .catch((err) => {
         console.log('Error connecting to MongoDB', err)
@@ -36,34 +52,56 @@ mongoose
 const PORT = process.env.PORT || 3001
 
 const app = express()
-const __dirname = path.resolve()
 
 app.use(logger('dev'))
 app.use(cors())
-app.use(json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 app.use('/api/users', usersRouter)
 app.use('/api/memes', memesRouter)
-    next()
+app.use('/api/templates', templatesRouter)
 
+app.get('/api/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
+app.use(
+    '/templates',
+    express.static(path.join(__dirname, 'server', 'public', 'templates'))
+)
+
+app.use('/templates/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
+app.use(
+    '/memes',
+    express.static(path.join(__dirname, 'server', 'public', 'memes'))
+)
+
+app.use('/memes/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
+app.use(express.static(path.join(__dirname, '/client/dist')))
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/index.html'))
+})
+// error handler
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
 })
-app.use(express.static(path.join(__dirname, '../client/public')))
 
 app.listen(PORT, () => {
-    console.log('')
     console.log('Server is running on', PORT)
-})
-
-app.use(function (err, req, res, next) {
-    // set locals, only providing error in development
-    res.locals.message = err.message
-    res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-    // render the error page
-    res.status(err.status || 500)
 })

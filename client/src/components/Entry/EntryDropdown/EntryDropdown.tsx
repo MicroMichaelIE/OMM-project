@@ -2,31 +2,33 @@
 
 import React, { useState } from 'react';
 import './EntryDropdown.scss';
-import OptionFlyout from './OptionFlyout/OptionFlyout';
+import { OptionFlyout } from './OptionFlyout/OptionFlyout';
 
 type DropdownProps = {
-    options: string[];
+    id: string;
+    label: string;
+    options: { display: string; value: string | number }[];
     selected: string;
     objectKey: string;
-    setSelected: (optionName: string, optionValue: string) => void;
+    setSelected: (optionName: string, optionValue: string, queryValue: string) => void;
 };
 
-function EntryDropdown({ options, selected, objectKey, setSelected }: DropdownProps) {
+function EntryDropdown({ options, selected, objectKey, label, setSelected }: DropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleDropdown = () => setIsOpen(!isOpen);
 
     const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        console.log(e);
-        setSelected(e.currentTarget.name, e.currentTarget.value);
+
+        setSelected(e.currentTarget.name, e.currentTarget.value, e.currentTarget.dataset.value as string);
         setIsOpen(false);
     };
 
     // STATES
     return (
         <div className="EntryDropdown">
-            <label>Industries</label>
+            <label>{label}</label>
             <div className="EntryBox" onClick={() => toggleDropdown()}>
                 <div className="left" placeholder="test">
                     {selected}
@@ -37,11 +39,12 @@ function EntryDropdown({ options, selected, objectKey, setSelected }: DropdownPr
             </div>
             <div className="slightpadding">
                 <div className="OptionDropdown" style={{ display: isOpen ? 'block' : 'none' }}>
-                    {options.map((name, index) => (
+                    {options.map((option, index) => (
                         <OptionFlyout
                             key={index}
                             flyout_name={objectKey}
-                            flyout_value={name}
+                            flyout_display={option.display}
+                            flyout_value={option.value}
                             handleDropdownClick={handleOptionClick}
                         />
                     ))}

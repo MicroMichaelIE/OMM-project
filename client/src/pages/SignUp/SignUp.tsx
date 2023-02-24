@@ -18,7 +18,7 @@ export const SignUp = () => {
     const { signUp, error } = useAuth()
 
     const [formState, setFormState] = useState(FormState.LOADING)
-    const [email, setEmail] = useState('')
+    const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
 
@@ -29,7 +29,7 @@ export const SignUp = () => {
         console.log('Submit')
         setFormState(FormState.LOADING)
         try {
-            const { ok } = await signUp({ email, password }, confirmPassword)
+            const { ok } = await signUp({ username, password }, confirmPassword)
             console.log(ok)
             if (!ok) {
                 console.log('im tring to throw an error')
@@ -48,14 +48,14 @@ export const SignUp = () => {
             <h1>Sign Up</h1>
             <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
+                    <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="email"
-                        placeholder="Enter email"
+                        type="text"
+                        placeholder="Enter username"
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setEmail(e.target.value)
+                            setUsername(e.target.value)
                         }
-                        value={email}
+                        value={username}
                         required
                     />
                 </Form.Group>
@@ -106,7 +106,7 @@ export const SignUp = () => {
             <Button
                 type="button"
                 variant="secondary"
-                onClick={() => navigate('/sign-in')}
+                onClick={() => navigate('/login')}
             >
                 Sign In
             </Button>

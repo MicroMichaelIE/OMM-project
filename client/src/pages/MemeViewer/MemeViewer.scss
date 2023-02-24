@@ -1,0 +1,58 @@
+.split {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    .myButtons {
+        display: flex;
+        gap: 1rem;
+    }
+    > button {
+        margin: 0 !important    ;
+    }
+}
+.MemeViewer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+
+    .MemeViewer_Image {
+        width: 60%;
+        position: relative;
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        .MemeViewer_Navigation {
+            width: 100%;
+            position: absolute;
+            display: flex;
+            justify-content: space-between;
+            top: calc(50% - 2rem);
+
+            > button {
+                width: 2rem;
+                height: 2rem;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                background: none;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.5);
+                color: white;
+                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    .MemeDetails {
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+    }
+}

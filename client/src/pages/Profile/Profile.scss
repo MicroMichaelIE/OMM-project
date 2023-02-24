@@ -1,0 +1,47 @@
+.Profile {
+    width: 80%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 0;
+
+    .ProfileInfo{
+        display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 1rem;
+    justify-content: space-around;
+
+    .left {
+        width: 30%;
+        > img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+    }
+
+    .right{
+
+    }
+
+}
+
+    .AllMemes {
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 1rem;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        .Meme {
+            * > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+            }
+        }
+    }
+}

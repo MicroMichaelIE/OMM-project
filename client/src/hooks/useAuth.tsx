@@ -4,6 +4,7 @@ import {
     useState,
     useMemo,
     useEffect,
+    useCallback,
     useContext,
 } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
@@ -39,9 +40,8 @@ interface AuthContextType {
         ok: boolean
         user?: LoggedInUser
     }>
-    checkToken: () => Promise<{ ok: boolean }>
+    isAuthenticated: boolean
     logout: () => void
-    userToken: string | null
 }
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
@@ -51,32 +51,56 @@ export function AuthProvider({
 }: {
     children: ReactNode
 }): JSX.Element {
-    const [userToken, setUserToken] = useState<string | null>(null)
     const [error, setError] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(false)
     const [loadingInitial, setLoadingInitial] = useState<boolean>(true)
+    const [isAuthenticated, setIsAuthenicated] = useState<boolean>(false)
     // We are using `react-router` for this example,
     // but feel free to omit this or use the
     // router of your choice.
     const navigate = useNavigate()
     const location = useLocation()
 
-    const { getItem, setItem } = useLocalStorage()
+    const { getItem, setItem, removeItem } = useLocalStorage()
 
     // If we change page, reset the error state.
     useEffect(() => {
-        if (error !== '') setError('')
+        setError('')
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname])
 
+    const checkUserToken = useCallback(async () => {
+        console.log(isAuthenticated)
+        const thisuserToken = !isAuthenticated ? getItem('token') : null
+        try {
+            if (thisuserToken) {
+                let { ok, message } = await verifyTokenBackend(thisuserToken)
+                console.log(ok)
+                if (ok) {
+                    setIsAuthenicated(true)
+                    return { ok: true }
+                } else {
+                    console.log(message)
+                    throw new Error(message)
+                }
+            } else {
+                console.log('no token')
+                navigate('/login')
+            }
+        } catch (error) {
+
+            setError("Forbidden")
+            navigate('/login')
+            return { ok: false }
+        } finally {
+            setLoadingInitial(false)
+        }
+    }, [isAuthenticated])
+
+
     // Checks if the user is logged in and if so, sets the user
     useEffect(() => {
-        let currentToken = getItem('token')
-        if (currentToken) {
-            setUserToken(currentToken)
-        }
-        setLoadingInitial(false)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        checkUserToken()
     }, [])
 
     const login = async (userForm: userAuth) => {
@@ -86,13 +110,12 @@ export function AuthProvider({
             const { token, ok, message } = await loginBackend(userForm)
 
             if (ok && token) {
-                setUserToken(token)
                 setItem('token', token)
+                setIsAuthenicated(true)
                 return { ok: true }
             } else {
                 console.log(message)
                 throw new Error(message)
-                return { ok: false }
             }
         } catch (error) {
             let errorMessage = getErrorMessage(error)
@@ -104,7 +127,7 @@ export function AuthProvider({
     }
 
     const signUp = async (
-        { email, password }: userAuth,
+        { username, password }: userAuth,
         confirmPassword: string
     ) => {
         if (!checkPasswordsMatch(password, confirmPassword)) {
@@ -113,13 +136,13 @@ export function AuthProvider({
         }
         try {
             let { token, ok, message } = await signUpBackend({
-                email,
+                username,
                 password,
             })
             console.log(ok, message)
 
             if (ok) {
-                setUserToken(token)
+                setIsAuthenicated(true)
                 setItem('token', token)
                 return { ok: true }
             } else {
@@ -133,9 +156,11 @@ export function AuthProvider({
     }
 
     const checkToken = async () => {
+        const thisuserToken = isAuthenticated && getItem('token')
         try {
-            if (userToken) {
-                let { ok, message } = await verifyTokenBackend(userToken)
+            if (thisuserToken) {
+                let { ok, message } = await verifyTokenBackend(thisuserToken)
+                console.log(ok)
                 if (ok) {
                     return { ok: true }
                 } else {
@@ -152,6 +177,7 @@ export function AuthProvider({
     }
 
     const getUser = async () => {
+        const userToken = isAuthenticated && getItem('token')
         try {
             if (userToken) {
                 const { ok, userInfo } = await getUserInfoBackend(userToken)
@@ -169,13 +195,15 @@ export function AuthProvider({
             return { ok: false }
         }
     }
-    
 
     const logout = () => {
         console.log('logout')
-        setUserToken(null)
+        setIsAuthenicated(false)
+        removeItem('token')
         navigate('/feed')
     }
+
+    // const getUserToken = getItem('token')
 
     const checkPasswordsMatch = (password: string, confirmPassword: string) => {
         if (password === '') {
@@ -194,17 +222,17 @@ export function AuthProvider({
     const memoedValue = useMemo(
         () => ({
             loadingInitial,
-            userToken,
             loading,
+            isAuthenticated,
+            // getUserToken,
             error,
             getUser,
             login,
             signUp,
-            checkToken,
             logout,
         }),
         // eslint-disable-next-line react-hooks/exhaustive-deps
-        [userToken, loading, error]
+        [isAuthenticated, loading, error, checkToken]
     )
 
     // We only want to render the underlying app after we

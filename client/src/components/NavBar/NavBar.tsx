@@ -10,8 +10,8 @@ import { UserMenu } from './UserMenu/UserMenu'
 const NavBar = () => {
     // const navigate = useNavigate()
     //const { user, logout } = useAuth()
-    const { userToken, logout } = useAuth()
-    const signedIn = userToken ? true : false
+    const { isAuthenticated, logout } = useAuth()
+    const signedIn = isAuthenticated ? true : false
 
     const navigate = useNavigate()
 

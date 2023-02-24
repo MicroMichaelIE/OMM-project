@@ -1,0 +1,44 @@
+.CommentSection {
+    width: 100%;
+
+    .comments {
+        max-height: 300px;
+        padding: 0.5rem;
+
+        > div {
+            margin: 0.5rem 0;
+        }
+    }
+    .scrollComments {
+        height: 100%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        max-height: 250px;
+        padding: 0.5rem;
+
+        > div {
+            margin: 0.5rem 0;
+        }
+    }
+    * > .noComments {
+        font-size: 1.3rem;
+        text-align: center;
+        margin: 0.5rem 0;
+        font-style: italic;
+    }
+
+    .CommentForm {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        & > div {
+            width: 95%;
+            margin: 0 0.5rem;
+        }
+
+        & > button {
+            font-size: 0.7rem;
+        }
+    }
+}

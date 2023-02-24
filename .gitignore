@@ -34,3 +34,12 @@ typings/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
+
+# images to not upload 
+server/public/
+
+# next.js build output
+.next
+
+# vite build output
+dist
