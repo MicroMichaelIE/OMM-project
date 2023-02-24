@@ -30,7 +30,6 @@ export const signUpBackend = async ({ username, password }: userAuth) => {
     })
     const json = await response.json()
 
-    console.log('----res' + response)
     if (response.ok) {
         return { ok: true, token: json.token }
     } else {

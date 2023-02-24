@@ -2,6 +2,11 @@ import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
 
+let __dirname = path.resolve()
+if (__dirname.includes('server')) {
+    __dirname = path.resolve(__dirname, '../')
+}
+
 export function checkFileType(file, cb) {
     // Allowed extensions
     const filetypes = /jpeg|jpg|png|gif/
@@ -20,7 +25,7 @@ export function checkFileType(file, cb) {
 }
 
 export const upload = multer({
-    dest: `./public/uploads/templates`,
+    dest: `${__dirname}/server/public/templates`,
     onFileUploadStart(file) {
         console.log(file.originalname + ' is starting ...')
     },
@@ -37,7 +42,7 @@ export const upload = multer({
 
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, `server/public/templates`)
+            cb(null, `${__dirname}/server/public/templates`)
         },
         filename: (req, file, cb) => {
             cb(

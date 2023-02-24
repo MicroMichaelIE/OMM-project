@@ -80,6 +80,7 @@ export function AuthProvider({
                     setIsAuthenicated(true)
                     return { ok: true }
                 } else {
+                    console.log(message)
                     throw new Error(message)
                 }
             } else {
@@ -87,9 +88,8 @@ export function AuthProvider({
                 navigate('/login')
             }
         } catch (error) {
-            let errorMessage = getErrorMessage(error)
-            setError(errorMessage)
-            console.log(errorMessage)
+
+            setError("Forbidden")
             navigate('/login')
             return { ok: false }
         } finally {

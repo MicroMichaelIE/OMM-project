@@ -13,6 +13,14 @@ import * as dotenv from 'dotenv'
 
 var __dirname = path.resolve()
 
+console.log(__dirname)
+
+if (__dirname.includes('server')) {
+    __dirname = path.resolve(__dirname, '../')
+}
+
+console.log(__dirname)
+
 dotenv.config({
     path: path.resolve(__dirname, '../.env'),
 })
@@ -66,15 +74,27 @@ app.use(
     express.static(path.join(__dirname, 'server', 'public', 'templates'))
 )
 
+app.use('/templates/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
 app.use(
     '/memes',
     express.static(path.join(__dirname, 'server', 'public', 'memes'))
 )
 
+app.use('/memes/*', (req, res) => {
+    res.status(404).json({
+        message: 'Not found',
+    })
+})
+
 app.use(express.static(path.join(__dirname, '/client/dist')))
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/client/index.html'))
+    res.sendFile(path.join(__dirname, '../client/index.html'))
 })
 // error handler
 // catch 404 and forward to error handler

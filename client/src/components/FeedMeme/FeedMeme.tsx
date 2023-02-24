@@ -73,7 +73,7 @@ export const FeedMeme = ({
         <BlankCard>
             <div className="Top">
                 <div className="Top_Image" onClick={(e) => handleImageClick(e, meme)}>
-                    <img src={`${templateURL}/${meme.imageLocation}`} alt="meme" />
+                    <img src={`${templateURL}/${meme.imageLocation}`} alt="meme" aria-description={meme.longerDescription} />
                 </div>
 
             </div>

@@ -8,6 +8,7 @@ const memeSchema = mongoose.Schema({
     usedTemplate: { type: String, ref: 'Template', required: true },
     fileFormat: { type: String },
     imageLocation: { type: String, required: true },
+    longerDescription: { type: String },
     captions: [
         {
             text: { type: String, required: true },

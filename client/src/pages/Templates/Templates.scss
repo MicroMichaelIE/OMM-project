@@ -1,0 +1,28 @@
+.template {
+    display: flex;
+    flex-direction: column;
+
+    .top {
+        position: relative;
+        .cover {
+            max-width: 600px;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+        }
+
+        & .hovered {
+            opacity: 1 !important;
+            transition: opacity 0.2s ease-in-out;
+        }
+    }
+    .bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+}

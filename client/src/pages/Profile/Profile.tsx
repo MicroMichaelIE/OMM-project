@@ -4,6 +4,7 @@ import { FeedMeme } from '../../components/FeedMeme/FeedMeme'
 import useAuth from '../../hooks/useAuth'
 import { getMemesBackend, getMemesByUserBackend } from '../../services/memeService'
 import { LoggedInUser, Meme } from '../../types/types'
+import UserPlaceholder from '../../assets/default_user.png'
 
 import './Profile.scss'
 
@@ -43,9 +44,21 @@ export const Profile = () => {
 
     return (
         <div className="Profile">
-            <Tabs defaultActiveKey={"posted_memes"}
+            <Tabs defaultActiveKey={"my_profile"}
                 id="TabSwitcher"
                 className='mb-3'>
+                <Tab eventKey="my_profile" title="My Profile" className='Tab'>
+                    <div className="ProfileInfo">
+                        <div className="left">
+                            <img src={UserPlaceholder} alt="placeholder here" />
+                        </div>
+                        <div className="right">
+                            <h2>{user?.username}</h2>
+                            <p>UserInfo: </p>
+                            <p>DateJoined: </p>
+                        </div>
+                    </div>
+                </Tab>
                 <Tab eventKey="posted_memes" title="My Posted Memes" className='Tab'>
                     <div className="AllMemes">
                         {userMemes.filter(meme => meme.private === false).map((meme) => (

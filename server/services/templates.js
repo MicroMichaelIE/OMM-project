@@ -3,7 +3,11 @@ import Meme from '../models/memes.js'
 import Jimp from 'jimp'
 import path from 'path'
 
-const __dirname = path.resolve()
+let __dirname = path.resolve()
+
+if (__dirname.includes('server')) {
+    __dirname = path.resolve(__dirname, '../')
+}
 
 const pathToPublic = path.join(__dirname, 'server/public')
 const pathToFont = path.join(__dirname, 'server/public/fonts/')
@@ -283,6 +287,7 @@ export const uploadTemplates = async (req, res, next) => {
         const { files } = req
         const templatePaths = []
         const givenName = req.body.givenName
+        const longerDescription = req.body.longerDescription
 
         await Promise.all(
             files.map(async (file) => {
@@ -296,6 +301,8 @@ export const uploadTemplates = async (req, res, next) => {
                     name: name,
                     owner: req.user_id,
                     date: Date.now(),
+                    fileFormat: `${path.extname(file.filename)}`,
+                    longerDescription: longerDescription,
                     imageLocation: path.join('templates', file.filename),
                     published: false,
                 })

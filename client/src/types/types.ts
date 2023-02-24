@@ -21,12 +21,14 @@ export type LoggedInUser = {
     username: string
 }
 
-export type Template = {
+export interface Template {
     _id: string
+    givenName: string
     name: string
     owner: string
     date: Date
     imageLocation: string
+    longerDescription?: string
     published: boolean
 }
 
@@ -39,6 +41,7 @@ export type Meme = {
         username: string
     }
     imageLocation: string
+    longerDesription?: string
     uploadDate: string
     private: boolean
     draft: boolean

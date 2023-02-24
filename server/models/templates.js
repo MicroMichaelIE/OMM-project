@@ -4,6 +4,8 @@ import mongoose from 'mongoose'
 const templateSchema = mongoose.Schema({
     name: { type: String, required: true },
     givenName: { type: String, required: true },
+    longerDescription: { type: String },
+    fileFormat: { type: String },
     owner: { type: String, ref: 'User', required: true },
     date: { type: Date, default: Date.now },
     imageLocation: { type: String, required: true },

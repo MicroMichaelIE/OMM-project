@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { Button, Form } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 import { EntryText } from '../../../components/Entry/EntryText/EntryText'
+import { EntryTextArea } from '../../../components/Entry/EntryTextArea/EntryTextArea'
 import { uploadTemplateBackend } from '../../../services/templateService'
 //import 'dom-mediacapture-record';
 import { ErrorType } from '../Main/Main'
 
 import './FileUpload.scss'
-
 
 export type MemeTemplate = {
     id?: string
@@ -16,43 +16,45 @@ export type MemeTemplate = {
     alt: string
     ImagePreviewUrl?: string
     templateName?: string
+    longerDescription?: string
 }
 
 export const FileTemplateUpload = ({
-    setError
-}: { setError: React.Dispatch<React.SetStateAction<ErrorType>> }) => {
+    setError,
+}: {
+    setError: React.Dispatch<React.SetStateAction<ErrorType>>
+}) => {
     const [templates, setTemplates] = useState<MemeTemplate[]>([])
 
     const navigate = useNavigate()
 
     const MemeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        if (!e.target.files) return;
+        e.preventDefault()
+        if (!e.target.files) return
 
-        const files = e.target.files;
+        const files = e.target.files
 
         const promises = Array.from(files).map((file) => {
             return new Promise<MemeTemplate>((resolve, reject) => {
-                const reader = new FileReader();
+                const reader = new FileReader()
                 reader.onloadend = () => {
                     resolve({
                         file,
                         src: reader.result as string,
                         alt: file.name,
                         ImagePreviewUrl: reader.result as string,
-                        templateName: "",
-                    });
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        });
+                        templateName: '',
+                    })
+                }
+                reader.onerror = reject
+                reader.readAsDataURL(file)
+            })
+        })
 
         Promise.all(promises).then((templates) => {
-            setTemplates((prev) => [...prev, ...templates]);
-        });
-    };
-
+            setTemplates((prev) => [...prev, ...templates])
+        })
+    }
 
     const handleTemplateNameChange = (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -66,41 +68,55 @@ export const FileTemplateUpload = ({
         setTemplates(newTemplates)
     }
 
+    const handleLongDescriptionChange = (
+        e: React.ChangeEvent<HTMLTextAreaElement>,
+        index: number
+    ) => {
+        const target = e.target
+        const value = target.value
+
+        const newTemplates = [...templates]
+        newTemplates[index].longerDescription = value
+        setTemplates(newTemplates)
+    }
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData();
+        e.preventDefault()
+        const formData = new FormData()
         templates.forEach((template) => {
-            formData.append("template", template.file);
+            formData.append('template', template.file)
             if (template.templateName !== undefined) {
-                formData.append("givenName", template.templateName);
+                formData.append('givenName', template.templateName)
             }
-        });
+            if (template.longerDescription !== undefined) {
+                formData.append('longerDescription', template.longerDescription)
+            }
+        })
 
         try {
-            const { ok, message } = await uploadTemplateBackend(formData);
-
+            const { ok, message } = await uploadTemplateBackend(formData)
 
             console.log(ok)
 
             if (ok) {
-                navigate("/templates");
+                navigate('/templates')
             } else {
                 setError({
                     message: message,
                     show: true,
-                });
-            };
+                })
+            }
         } catch (error) {
             if (error instanceof Error) {
                 setError({
                     message: error.message,
                     show: true,
-                });
+                })
             } else {
                 setError({
-                    message: "Something went wrong",
+                    message: 'Something went wrong',
                     show: true,
-                });
+                })
             }
         }
     }
@@ -126,6 +142,18 @@ export const FileTemplateUpload = ({
                                 onChange={(
                                     e: React.ChangeEvent<HTMLInputElement>
                                 ) => handleTemplateNameChange(e, index)}
+                            />
+                            <p>
+                                Please provided a more detailed description to
+                                help those who are differently abled.{' '}
+                            </p>
+                            <EntryTextArea
+                                id="longerDescription"
+                                name="longerDescription"
+                                label="Longer Description"
+                                onChange={(e) =>
+                                    handleLongDescriptionChange(e, index)
+                                }
                             />
                         </div>
                     ))}

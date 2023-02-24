@@ -22,6 +22,7 @@ router.post(
                 console.log(err)
                 return res.send('Error with multer')
             } else if (err) {
+                console.log(err)
                 console.log('Error during upload')
                 return res.status(500).json({ error: err.message })
             }
